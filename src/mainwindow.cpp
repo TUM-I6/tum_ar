@@ -5,18 +5,20 @@ MainWindow::MainWindow(QWidget *parent) :
  QMainWindow(parent),
  _ui(new Ui::MainWindow),
  _nh(),
- _actionServer(_nh, "ActionServer", false),
+ _actionServer(_nh, "ar_inspection", false),
  _pos(0),
  _wsaType("type_a") {
 	_ui->setupUi(this);
 	QObject::connect(_ui->pushButtonAccept, SIGNAL(clicked()),this, SLOT(pushButtonAcceptClicked()));
 	QObject::connect(_ui->pushButtonReject, SIGNAL(clicked()),this, SLOT(pushButtonRejectClicked()));
 
-	_actionServer.registerGoalCallback(boost::bind(&MainWindow::executeARInspection, this));
-
+	/* // for debugging only
 	for (int i=0; i<5; i++) {
 		_pois.push_back(i) ;
-	}
+	}*/
+
+	_actionServer.registerGoalCallback(boost::bind(&MainWindow::executeARInspection, this));
+	_actionServer.start() ;
 }
 
 MainWindow::~MainWindow() {

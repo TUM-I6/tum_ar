@@ -55,7 +55,8 @@ void MainWindow::executeARInspection() { // const ar_window::ARInspectionGoalCon
 }
 
 void MainWindow::pushButtonAcceptClicked() {
-	publishFeedback(_pos, ar_window::ARInspectionFeedback::ACCEPTED) ;
+	ROS_INFO_STREAM("[ar_window] POI "<<_pois[_pos]<<" accepted.") ;
+	publishFeedback(_pois[_pos], ar_window::ARInspectionFeedback::ACCEPTED) ;
 
 	_pos++ ;
 	if (_pos >= _pois.size()) {
@@ -73,10 +74,12 @@ void MainWindow::pushButtonAcceptClicked() {
 }
 
 void MainWindow::pushButtonRejectClicked() {
+	ROS_INFO_STREAM("[ar_window] POI "<<_pois[_pos]<<" rejected.") ;
+	publishFeedback(_pois[_pos], ar_window::ARInspectionFeedback::REJECTED) ;
+
+	displayImage(getImageURL()) ;
 	_pos = 0 ;
 	_pois.clear() ;
-	displayImage(getImageURL()) ;
-	publishFeedback(_pos, ar_window::ARInspectionFeedback::REJECTED) ;
 	
 	ar_window::ARInspectionResult result ;
 	result.status = ar_window::ARInspectionResult::REJECTED ;

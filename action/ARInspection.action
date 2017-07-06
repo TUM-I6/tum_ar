@@ -1,0 +1,27 @@
+# id of the WSA to run inspection on
+string wsa_type
+
+# Numbers POIs to inspect. Inspect all if empty
+uint32[] pois
+
+---
+
+# Time of inspection result
+time Time
+
+# ID of POI that has been inspected
+uint32 poi
+
+# Result of inspection
+int8 status
+
+int8 REJECTED=0
+int8 ACCEPTED=1
+
+---
+
+# Result of inspection
+int8 status
+
+int8 REJECTED=0
+int8 ACCEPTED=1

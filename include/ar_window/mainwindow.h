@@ -21,7 +21,7 @@ class MainWindow : public QMainWindow {
 		explicit MainWindow(QWidget *parent = 0);
 		~MainWindow();
 		void displayImage(const std::string& url) ;
-		void executeARInspection(const ar_window::ARInspectionGoalConstPtr &goal) ;
+		void executeARInspection() ; // const ar_window::ARInspectionGoalConstPtr &goal) ;
 
 	public slots:
 		void pushButtonAcceptClicked() ;
@@ -36,10 +36,18 @@ class MainWindow : public QMainWindow {
 		std::vector<unsigned int> _pois ;
 		int _pos ;
 
+		void publishFeedback(unsigned int poi, unsigned char status) {
+			ar_window::ARInspectionFeedback feedback ;
+			feedback.time = ros::Time::now() ;
+			feedback.poi = poi ;
+			feedback.status = status ;
+			_actionServer.publishFeedback(feedback) ;
+		}
+
 		static std::string getImageURL(const std::string& wsaType, const unsigned int poi) {
 			std::stringstream stream ;
 			stream << ros::package::getPath("ar_window")<<"/images/"<<wsaType<<"/poi_"<<((poi<9)?"0":"")<<poi<<".png" ;
-			ROS_INFO_STREAM("[ar_window] File-path: "<<stream.str()) ;
+			ROS_DEBUG_STREAM("[ar_window] File-path: "<<stream.str()) ;
 			return stream.str() ;
 		}
 

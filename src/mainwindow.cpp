@@ -7,13 +7,14 @@ MainWindow::MainWindow(QWidget *parent) :
  _nh(),
  _actionServer(_nh, "ar_inspection", false),
  _pos(0),
- _wsaType("type_a") {
+ _wsaType("type_a"),
+ _defaultSize(7) {
 	_ui->setupUi(this);
 	QObject::connect(_ui->pushButtonAccept, SIGNAL(clicked()),this, SLOT(pushButtonAcceptClicked()));
 	QObject::connect(_ui->pushButtonReject, SIGNAL(clicked()),this, SLOT(pushButtonRejectClicked()));
 
 	/* // for debugging only
-	for (int i=0; i<5; i++) {
+	for (int i=0; i<_defaultSize; i++) {
 		_pois.push_back(i) ;
 	}*/
 
@@ -37,6 +38,7 @@ void MainWindow::displayImage(const std::string& url) {
 void MainWindow::executeARInspection() { // const ar_window::ARInspectionGoalConstPtr &goal
 	ar_window::ARInspectionGoalConstPtr goal = _actionServer.acceptNewGoal() ;
 
+
 	_wsaType = goal->wsa_type ;
 	_pos = 0 ;
 
@@ -45,7 +47,7 @@ void MainWindow::executeARInspection() { // const ar_window::ARInspectionGoalCon
 	}
 	else {
 		_pois.clear() ;
-		for (int i=0; i<5; i++) {
+		for (int i=0; i<_defaultSize; i++) {
 			_pois.push_back(i) ;
 		}
 	}

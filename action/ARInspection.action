@@ -18,9 +18,6 @@ uint8 ACCEPTED = 1
 ---
 # Feedback
 
-# Time of inspection result
-time time
-
 # ID of POI that has been inspected
 uint32 poi
 

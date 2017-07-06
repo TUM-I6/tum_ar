@@ -35,10 +35,10 @@ class MainWindow : public QMainWindow {
 		std::string _wsaType ;
 		std::vector<unsigned int> _pois ;
 		int _pos ;
+		int _defaultSize ;
 
 		void publishFeedback(unsigned int poi, unsigned char status) {
 			ar_window::ARInspectionFeedback feedback ;
-			feedback.time = ros::Time::now() ;
 			feedback.poi = poi ;
 			feedback.status = status ;
 			_actionServer.publishFeedback(feedback) ;

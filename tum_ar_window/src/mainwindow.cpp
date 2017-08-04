@@ -1,4 +1,4 @@
-#include <ar_window/mainwindow.h>
+#include <tum_ar_window/mainwindow.h>
 #include <ui_mainwindow.h>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent) :
  _wsaType("type_a"),
  _defaultSize(7) {
 	_ui->setupUi(this);
+	setWindowTitle("AR Window") ;
 	QObject::connect(_ui->pushButtonAccept, SIGNAL(clicked()),this, SLOT(pushButtonAcceptClicked()));
 	QObject::connect(_ui->pushButtonReject, SIGNAL(clicked()),this, SLOT(pushButtonRejectClicked()));
 

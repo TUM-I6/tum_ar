@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.0.2)
-project(ar_window)
+project(tum_ar_window)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
@@ -111,7 +111,7 @@ generate_messages(
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
 	# INCLUDE_DIRS include
-	# LIBRARIES ar_window
+	# LIBRARIES tum_ar_window
 	# CATKIN_DEPENDS roscpp
 	# DEPENDS system_lib
 )
@@ -128,7 +128,7 @@ include_directories(
 )
 
 set (MyProjectLib_src src/mainwindow.cpp)
-set (MyProjectLib_hdr include/ar_window/mainwindow.h)
+set (MyProjectLib_hdr include/tum_ar_window/mainwindow.h)
 set (MyProjectLib_ui  ui/mainwindow.ui)
 set (MyProjectBin_src src/main.cpp)
 
@@ -142,7 +142,7 @@ qt5_wrap_ui (MyProjectLib_ui_moc  ${MyProjectLib_ui})
 
 
 include_directories (src)
-include_directories (../../build/ar_window)
+include_directories (../../../build/tum_ar/tum_ar_window)
 
 
 ## Declare a C++ library
@@ -238,7 +238,7 @@ target_link_libraries(
 #############
 
 ## Add gtest based cpp test target and link libraries
-# catkin_add_gtest(${PROJECT_NAME}-test test/test_ar_window.cpp)
+# catkin_add_gtest(${PROJECT_NAME}-test test/test_tum_ar_window.cpp)
 # if(TARGET ${PROJECT_NAME}-test)
 #   target_link_libraries(${PROJECT_NAME}-test ${PROJECT_NAME})
 # endif()

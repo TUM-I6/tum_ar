@@ -4,6 +4,7 @@
 #include <ros/ros.h>
 #include <geometry_msgs/PoseArray.h>
 #include <tf/transform_listener.h>
+#include <tf/transform_broadcaster.h>
 #include <string.h>
 #include <boost/circular_buffer.hpp>
 #include <Eigen/Dense>
@@ -21,6 +22,7 @@ class TableLocalization {
 		ros::NodeHandle _nh ;
 		ros::Subscriber _tagDetectionsSubscriber ;
 		tf::TransformListener _tfListener ;
+		tf::TransformBroadcaster _tfBroadcaster ;
 
 		std::string _cameraFrame ;
 		std::string _tableFrame ;

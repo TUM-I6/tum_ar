@@ -1,7 +1,8 @@
 #include <tum_table_localization/table_localization.h>
+#include <Eigen/Geometry> 
 
 #define DEFAULT_CAMERA_FRAME "camera"
-#define DEFAULT_TABLE_FRAME "table"
+#define DEFAULT_TABLE_FRAME "table_center"
 #define DEFAULT_TAG_DETECTION_TOPIC "/tag_detections_pose"
 
 #define DEFAULT_TOP_LEFT_CORNER_FRAME "table_corner_top_left"
@@ -25,7 +26,7 @@ TableLocalization::TableLocalization()
 	_nh.param<std::string>("bottom_left_corner_frame", _bottomLeftCornerFrame, DEFAULT_BOTTOM_LEFT_CORNER_FRAME) ;
 	_nh.param<std::string>("bottom_right_corner_frame", _bottomRightCornerFrame, DEFAULT_BOTTOM_RIGHT_CORNER_FRAME) ;
 
-	_tagDetectionsSubscriber = _nh.subscribe(_tagDetectionsTopic, 1, &TableLocalization::tagDetectionsCallback, this) ;
+	//_tagDetectionsSubscriber = _nh.subscribe(_tagDetectionsTopic, 1, &TableLocalization::tagDetectionsCallback, this) ;
 }
 
 void TableLocalization::tagDetectionsCallback(const geometry_msgs::PoseArray::ConstPtr& msg) {
@@ -74,6 +75,17 @@ void TableLocalization::run() {
 		Eigen::Vector3f y = ((b-a)+(d-c))/2.0f ;
 
 		Eigen:: Vector3f z = x.cross(y) ;
+
+		tf::Matrix3x3 r ;
+		r.setValue(x.x(), x.y(), x.z(),
+		           y.x(), y.y(), y.z(),
+		           z.x(), z.y(), z.z()) ;
+
+		tf::Transform transform;
+		transform.setOrigin(tf::Vector3(t.x(), t.y(), t.z())) ;
+		transform.setBasis(r) ;
+
+		_tfBroadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _cameraFrame, _tableFrame)) ;
 	}
 }
 

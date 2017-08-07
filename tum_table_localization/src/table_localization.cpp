@@ -103,19 +103,19 @@ void TableLocalization::run() {
 
 		y = z.cross(x) ;
 
-		// ROS_INFO_STREAM("[tum_table_localization] t: ("<<t.x()<<", "<<t.y()<<", "<<t.z()<<")") ;
-		// ROS_INFO_STREAM("[tum_table_localization] Base:\nx: ("<<x.x()<<", "<<x.y()<<", "<<x.z()<<"),\ny: ("<<y.x()<<", "<<y.y()<<", "<<y.z()<<"),\nz: ("<<z.x()<<", "<<z.y()<<", "<<z.z()<<")") ;
+		ROS_INFO_STREAM("[tum_table_localization] t: ("<<t.x()<<", "<<t.y()<<", "<<t.z()<<")") ;
+		ROS_INFO_STREAM("[tum_table_localization] Base:\nx: ("<<x.x()<<", "<<x.y()<<", "<<x.z()<<"),\ny: ("<<y.x()<<", "<<y.y()<<", "<<y.z()<<"),\nz: ("<<z.x()<<", "<<z.y()<<", "<<z.z()<<")") ;
 
 		tf::Matrix3x3 r ;
-		r.setValue(x.x(), y.x(), z.x(),
-		           x.y(), y.y(), z.y(),
-		           x.z(), y.z(), z.z()) ;
+		r.setValue(x.x(), x.y(), x.z(),
+		           y.x(), y.y(), y.z(),
+		           z.x(), z.y(), z.z()) ;
 
 		tf::Transform transform;
-		transform.setOrigin(tf::Vector3(t.x(), t.y(), t.z())) ;
+		transform.setOrigin(r*tf::Vector3(-t.x(), -t.y(), -t.z())) ;
 		transform.setBasis(r) ;
 
-		_tfBroadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _cameraFrame, _tableFrame)) ;
+		_tfBroadcaster.sendTransform(tf::StampedTransform(transform, ros::Time::now(), _tableFrame, _cameraFrame)) ;
 	}
 }
 

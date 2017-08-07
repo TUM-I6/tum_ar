@@ -1,0 +1,6 @@
+<!-- Example launche file for table localization node -->
+<launch>
+	<param name="camera_frame" value="kinect2_rgb_optical_frame" type="string" />
+	<param name="table_frame" value="table_center" type="string" />
+	<node name="table_localization" pkg="tum_table_localization" type="tum_table_localization_node" output="screen" />
+</launch>

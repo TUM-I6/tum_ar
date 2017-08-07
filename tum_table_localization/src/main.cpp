@@ -9,8 +9,8 @@ int main(int argc, char *argv[]) {
 
 	// Run node
 
-	TableLocalization tableLocalizaionNode ;
-	tableLocalizaionNode.run() ;
+	TableLocalization tableLocalizationNode ;
+	tableLocalizationNode.run() ;
 
 	return 0;
 }

@@ -14,6 +14,9 @@ class TableLocalization {
 		TableLocalization() ;
 		void tagDetectionsCallback(const geometry_msgs::PoseArray::ConstPtr& msg) ;
 		void run() ;
+		std::string _cameraFrame ;
+		std::string _tableFrame ;
+
 
 	private:
 		void updateTransformation(const std::string& cornerFrame, boost::circular_buffer<Eigen::Vector3f>& buffer) ;
@@ -24,8 +27,6 @@ class TableLocalization {
 		tf::TransformListener _tfListener ;
 		tf::TransformBroadcaster _tfBroadcaster ;
 
-		std::string _cameraFrame ;
-		std::string _tableFrame ;
 		std::string _tagDetectionsTopic ;
 
 		std::string _topLeftCornerFrame ;

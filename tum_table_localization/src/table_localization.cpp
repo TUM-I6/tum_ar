@@ -103,8 +103,8 @@ void TableLocalization::run() {
 
 		y = z.cross(x) ;
 
-		ROS_INFO_STREAM("[tum_table_localization] t: ("<<t.x()<<", "<<t.y()<<", "<<t.z()<<")") ;
-		ROS_INFO_STREAM("[tum_table_localization] Base:\nx: ("<<x.x()<<", "<<x.y()<<", "<<x.z()<<"),\ny: ("<<y.x()<<", "<<y.y()<<", "<<y.z()<<"),\nz: ("<<z.x()<<", "<<z.y()<<", "<<z.z()<<")") ;
+		//ROS_INFO_STREAM("[tum_table_localization] t: ("<<t.x()<<", "<<t.y()<<", "<<t.z()<<")") ;
+		//ROS_INFO_STREAM("[tum_table_localization] Base:\nx: ("<<x.x()<<", "<<x.y()<<", "<<x.z()<<"),\ny: ("<<y.x()<<", "<<y.y()<<", "<<y.z()<<"),\nz: ("<<z.x()<<", "<<z.y()<<", "<<z.z()<<")") ;
 
 		tf::Matrix3x3 r ;
 		r.setValue(x.x(), x.y(), x.z(),

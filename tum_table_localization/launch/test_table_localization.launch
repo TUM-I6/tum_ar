@@ -1,0 +1,38 @@
+<!-- Example launche file for table localization node -->
+<launch>
+	<include file="$(find tum_calibration_launch)/launch/include/kinect2.launch.xml" />
+	<include file="$(find tum_table_localization)/launch/table_localization.launch" />
+	<include file="$(find tum_workcell_description)/launch/show_workcell_description.launch" />
+
+	<node pkg="apriltags_ros" type="apriltag_detector_node" name="apriltag_detector" output="log">
+		<!-- Remap topic required by the node to custom topics -->
+		<remap from="image_rect" to="/kinect2/kinect2/hd/image_color" />
+		<remap from="camera_info" to="/kinect2/kinect2/hd/camera_info" />
+		
+		<!--<remap from="image_rect" to="/kinect2/kinect2/hd/image_color" />
+		<remap from="camera_info" to="/kinect2/kinect2/hd/camera_info" />-->
+
+		<!-- Optional: Subscribe to the compressed stream-->
+		<param name="image_transport" type="str" value="compressed" />
+
+		<!-- Select the tag family: 16h5, 25h7, 25h9, 36h9, or 36h11(default) -->
+		<!--<param name="tag_family" type="str" value="36h11" />-->
+		<param name="tag_family" type="str" value="25h7" />
+
+		<!-- Enable projected optical measurements for more accurate tag transformations -->
+		<!-- This exists for backwards compatability and should be left true for new setups -->
+		<param name="projected_optics" type="bool" value="true" />
+
+		<!-- Describe the tags -->
+		<rosparam param="tag_descriptions">
+      [
+        {id: 0, size: 0.0694, frame_id: table_corner_top_left},
+        {id: 1, size: 0.0694, frame_id: table_corner_top_right},
+        {id: 2, size: 0.0694, frame_id: table_corner_bottom_left},
+        {id: 3, size: 0.0694, frame_id: table_corner_bottom_right},
+        {id: 4, size: 0.0694, frame_id: tool_01},
+        {id: 5, size: 0.0694, frame_id: tool_02}
+      ]
+        </rosparam>
+	</node>
+</launch>

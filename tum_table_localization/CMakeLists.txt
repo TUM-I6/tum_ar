@@ -120,7 +120,7 @@ catkin_package(
 #		roscpp
 #		tf
 	DEPENDS
-		Eigen
+		Eigen3
 		Boost
 )
 
@@ -133,7 +133,7 @@ catkin_package(
 include_directories(
 	include
 	${catkin_INCLUDE_DIRS}
-	${Eigen_INCLUDE_DIRS}
+	${EIGEN3_INCLUDE_DIRS}
 	${Boost_INCLUDE_DIRS}
 )
 
@@ -170,7 +170,6 @@ add_executable(
 target_link_libraries(
 	${PROJECT_NAME}_node
 		${catkin_LIBRARIES}
-		${Eigen_LIBRARIES}
 		${Boost_LIBRARIES}
 )
 

@@ -13,16 +13,23 @@ add_compile_options(-std=c++11)
 ## is used, also find other catkin packages
 find_package(
 	catkin REQUIRED COMPONENTS
+		actionlib
 		roscpp
 		roslib
-		actionlib
+		message_generation
+		tf
+		visualization_msgs
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
+find_package(Eigen3 REQUIRED)
+find_package(OpenCV REQUIRED)
+find_package(Boost REQUIRED COMPONENTS filesystem)
 # Find the QtWidgets library
-find_package (Qt5Widgets)
+find_package (Qt5Widgets REQUIRED)
+find_package (Qt5Svg REQUIRED)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -112,7 +119,9 @@ generate_messages(
 catkin_package(
 	# INCLUDE_DIRS include
 	# LIBRARIES tum_ar_window
-	# CATKIN_DEPENDS roscpp
+	CATKIN_DEPENDS
+		# roscpp
+		message_runtime
 	# DEPENDS system_lib
 )
 
@@ -125,15 +134,24 @@ catkin_package(
 include_directories(
 	include
 	${catkin_INCLUDE_DIRS}
+	${Boost_INCLUDE_DIRS}
+	${EIGEN3_INCLUDE_DIRS}
+	${OpenCV_INCLUDE_DIRS}
 )
 
-set (MyProjectLib_src src/mainwindow.cpp)
-set (MyProjectLib_hdr include/tum_ar_window/mainwindow.h)
-set (MyProjectLib_ui  ui/mainwindow.ui)
+set (
+	MyProjectLib_src
+		src/ARWindow.cpp
+		src/Projector.cpp
+)
+
+set (MyProjectLib_hdr include/tum_ar_window/ARWindow.h)
+set (MyProjectLib_ui  ui/ARWindow.ui)
+
 set (MyProjectBin_src src/main.cpp)
 
 #qt5_wrap_cpp(${PROJECT_SOURCE_DIR}/ui/moc_test.h ${MyProjectLib_hdr})
-#qt5_wrap_ui (${PROJECT_SOURCE_DIR}/ui/ui_mainwindow.h  ${MyProjectLib_ui})
+#qt5_wrap_ui (${PROJECT_SOURCE_DIR}/ui/ui_ARWindow.h  ${MyProjectLib_ui})
 
 qt5_wrap_cpp(MyProjectLib_hdr_moc ${MyProjectLib_hdr})
 qt5_wrap_ui (MyProjectLib_ui_moc  ${MyProjectLib_ui})
@@ -157,7 +175,10 @@ add_library(${PROJECT_NAME}_lib SHARED
 target_link_libraries(
 	${PROJECT_NAME}_lib
 		${catkin_LIBRARIES}
+		${Boost_LIBRARIES}
+		${OpenCV_LIBS}
 		Qt5::Widgets
+		Qt5::Svg
 )
 
 ## Add cmake target dependencies of the library
@@ -197,6 +218,7 @@ target_link_libraries(
 	${PROJECT_NAME}_node
 		# ${catkin_LIBRARIES}
 		Qt5::Widgets
+		Qt5::Svg
 		${PROJECT_NAME}_lib
 )
 

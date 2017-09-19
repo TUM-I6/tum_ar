@@ -1,0 +1,4 @@
+<!-- Start arm-to-camera-calibration -->
+<launch>
+	<node name="ar_window" pkg="tum_ar_window" type="tum_ar_window_node" output="screen" />
+</launch>

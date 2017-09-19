@@ -1,5 +1,5 @@
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
+#ifndef AR_WINDOW_H
+#define AR_WINDOW_H
 
 #include <QMainWindow>
 #include <QPushButton>
@@ -9,28 +9,42 @@
 #include <tum_ar_window/ARInspectionAction.h>
 #include <actionlib/server/simple_action_server.h>
 #include <vector>
+#include <opencv2/imgproc/imgproc.hpp>
+//#include <opencv2/core/eigen.hpp>
 
 namespace Ui {
-	class MainWindow;
+	class ARWindow ;
 }
 
-class MainWindow : public QMainWindow {
+class ARWindow : public QMainWindow {
 	Q_OBJECT
 
 	public:
-		explicit MainWindow(QWidget *parent = 0);
-		~MainWindow();
+		explicit ARWindow(QWidget *parent = 0);
+		~ARWindow();
+		void draw() ;	
+		void displayImage(const cv::Mat& image) ;
 		void displayImage(const std::string& url) ;
-		void executeARInspection() ; // const tum_ar_window::ARInspectionGoalConstPtr &goal) ;
+		void executeARInspection() ;
+		
+		void drawCornerBox(QPainter& painter, const QPoint& position, const QSize& boxSize, const QColor& color=Qt::white, const int edgeLenght=50, const int lineWidth=6) ;
+		void drawLogos(QPainter& painter, const QPoint& position, const int logoHeight) ; 
+		QPixmap getNewFrame(const std::string& title="") ;
 
 	public slots:
 		void pushButtonAcceptClicked() ;
 		void pushButtonRejectClicked() ;
 
 	private:
-		Ui::MainWindow *_ui;
+		Ui::ARWindow *_ui;
 		ros::NodeHandle _nh ;
 		actionlib::SimpleActionServer<tum_ar_window::ARInspectionAction> _actionServer ;
+
+		QIcon _tumLogo ;
+		QIcon _tumI6Logo ;
+		QIcon _horseLogo ;
+
+		QFont _font ;
 
 		std::string _wsaType ;
 		std::vector<unsigned int> _pois ;
@@ -58,4 +72,4 @@ class MainWindow : public QMainWindow {
 		}
 };
 
-#endif // MAINWINDOW_H
+#endif // AR_WINDOW_H

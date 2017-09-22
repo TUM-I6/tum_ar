@@ -26,10 +26,19 @@ class ARWindow : public QMainWindow {
 		void displayImage(const cv::Mat& image) ;
 		void displayImage(const std::string& url) ;
 		void executeARInspection() ;
+
+		int canvasWidth() const ;
+		int canvasHeight() const ;
 		
-		void drawCornerBox(QPainter& painter, const QPoint& position, const QSize& boxSize, const QColor& color=Qt::white, const int edgeLenght=50, const int lineWidth=6) ;
-		void drawLogos(QPainter& painter, const QPoint& position, const int logoHeight) ; 
-		QPixmap getNewFrame(const std::string& title="") ;
+		void drawCornerBox(QPainter& painter, const QPoint& position, const QSize& boxSize, const QColor& color=Qt::white, const int edgeLenght=50, const int lineWidth=6) const ;
+		void drawLogos(QPainter& painter, const QPoint& position, const int logoHeight) const ;
+		void drawPoi(QPainter& painter, const QPoint& position, const float radius, const std::string& label="", const QColor& border=Qt::red, const QColor& fill=Qt::white) const ;
+		void drawArea(QPainter& painter, const QPoint& position, const QSize& size, const std::string& label="", const QColor& border=Qt::blue, const QColor& fill=Qt::transparent) const ;
+
+		void drawBoxLabel(QPainter& painter, const QPoint& boxPosition, const QSize& boxSize, const std::string& label, const int offset, const QColor& color) const ;
+		void drawCircleLabel(QPainter& painter, const QPoint& cirlePosition, const float radius, const std::string& label, const int offset, const QColor& color) const ;
+
+		QPixmap getNewFrame(const std::string& title="") const ;
 
 	public slots:
 		void pushButtonAcceptClicked() ;

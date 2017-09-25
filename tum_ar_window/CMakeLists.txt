@@ -14,6 +14,7 @@ add_compile_options(-std=c++11)
 find_package(
 	catkin REQUIRED COMPONENTS
 		actionlib
+		geometry_msgs
 		roscpp
 		roslib
 		message_generation
@@ -30,6 +31,7 @@ find_package(Boost REQUIRED COMPONENTS filesystem)
 # Find the QtWidgets library
 find_package (Qt5Widgets REQUIRED)
 find_package (Qt5Svg REQUIRED)
+find_package (Qt5Gui REQUIRED)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -61,11 +63,13 @@ find_package (Qt5Svg REQUIRED)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+	FILES
+		Box.msg
+		POI.msg
+		ARSlide.msg
+		InspectionResult.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -84,6 +88,7 @@ add_action_files(
 generate_messages(
 	DEPENDENCIES
 		std_msgs  # Or other packages containing msgs
+		geometry_msgs
 		actionlib_msgs
 )
 
@@ -136,12 +141,14 @@ include_directories(
 	${catkin_INCLUDE_DIRS}
 	${Boost_INCLUDE_DIRS}
 	${EIGEN3_INCLUDE_DIRS}
-	${OpenCV_INCLUDE_DIRS}
+	# ${OpenCV_INCLUDE_DIRS}
 )
 
 set (
 	MyProjectLib_src
 		src/ARWindow.cpp
+		src/ARSlideRenderer.cpp
+		src/ARInspectionNode.cpp
 		src/Projector.cpp
 )
 
@@ -176,9 +183,10 @@ target_link_libraries(
 	${PROJECT_NAME}_lib
 		${catkin_LIBRARIES}
 		${Boost_LIBRARIES}
-		${OpenCV_LIBS}
+		# ${OpenCV_LIBS}
 		Qt5::Widgets
 		Qt5::Svg
+		Qt5::Gui
 )
 
 ## Add cmake target dependencies of the library

@@ -24,11 +24,21 @@ namespace tum {
 				return _resolution ;
 			}
 
-			Eigen::Matrix<float, 3, 4> getImagePlane(const float dist) ;
+			std::string getFrame() const {
+				return _projectorFrame ;
+			}
+
+			Eigen::Matrix3f getCameraMatrix() const {
+				return _k ;
+			}
+
+			Eigen::Vector2f projectToPixel(const Eigen::Vector3f& point) const ;
+
+			Eigen::Matrix<float, 3, 4> getImagePlane(const float dist) const ;
 			void publishViewFrustumMarker(const Eigen::Matrix<float, 3, 4>& plane) ;
 
 		private:
-			void init(const bool publishViewFrustum, const float viewFrustumLenght, const std::string& beamerFrame) ;
+			void init(const bool publishViewFrustum, const float viewFrustumLenght, const std::string& projectorFrame) ;
 
 			ros::NodeHandle& _nh ;
 			ros::Publisher _viewFrustumPub ;

@@ -1,6 +1,9 @@
 #include <tum_ar_window/ARSlideRenderer.h>
 #include <tum_ar_window/Toolbox.h>
 #include <ros/package.h>
+#include <limits>
+#include <cmath>
+#include <Eigen/Dense>
 
 #define TEXTBOX_WIDTH 1920
 #define TEXTBOX_HEIGHT 128
@@ -19,11 +22,11 @@ tum::ARSlideRenderer::ARSlideRenderer(const Projector& projector)
 tum::ARSlideRenderer::~ARSlideRenderer() {
 }
 
-QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_window::ARSlide& slide) {
+QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_window::ARSlide& slide) const {
 	return renderSlide(slide, QRect(0,0,_projector.getResolution().x(),_projector.getResolution().y())) ;
 }
 
-QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_window::ARSlide& slide, const QRect& area) {
+QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_window::ARSlide& slide, const QRect& area) const {
 	//ROS_INFO_STREAM("[ARSlideRenderer:"<<__LINE__<<"]") ;
 	QPixmap pixmap(area.width(), area.height()) ;
 	pixmap.fill(Qt::transparent) ;
@@ -32,6 +35,19 @@ QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_window::ARSlide& slide, c
 	drawBackground(painter, slide.instruction) ;
 
 	for (const tum_ar_window::Box& box : slide.boxes) {
+		renderBox(painter, box, area) ;
+	}
+
+	for (const tum_ar_window::POI& poi : slide.pois) {
+		renderPOI(painter, poi, area) ;
+	}
+
+	return pixmap ;
+}
+
+void tum::ARSlideRenderer::renderBox(QPainter& painter, const tum_ar_window::Box& box, const QRect& canvasArea) const {
+	if (box.header.frame_id == _projector.getFrame()) {
+		// draw in Pixel coordinates
 		drawArea(
 			painter,
 			QPoint(box.position.x, box.position.y),
@@ -40,9 +56,41 @@ QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_window::ARSlide& slide, c
 			QColor(box.border_color.r*255, box.border_color.g*255, box.border_color.b*255, box.border_color.a*255),
 			QColor(box.fill_color.r*255, box.fill_color.g*255, box.fill_color.b*255, box.fill_color.a*255)
 		) ;
+		return ;
 	}
 
-	for (const tum_ar_window::POI& poi : slide.pois) {
+	geometry_msgs::PointStamped position ;
+	position.header = box.header ;
+	position.point  = box.position ;
+
+	geometry_msgs::Point origin = toProjectorFrame(position) ;
+	if (std::isnan(origin.x)) {
+		return ;
+	}
+
+	geometry_msgs::Point shiftX = origin ;
+	shiftX.x += box.width ;
+
+	geometry_msgs::Point shiftY = origin ;
+	shiftY.y += box.height ;
+
+	QPointF center = projectToPixel(origin) ;
+	int width = std::max((int)(projectToPixel(shiftX).x()-center.x()), 1) ;
+	int height = std::max((int)(projectToPixel(shiftY).y()-center.y()), 1) ;
+
+	drawArea(
+		painter,
+		QPoint(center.x()-width/2, center.y()-height/2),
+		QSize(width, height),
+		box.label,
+		QColor(box.border_color.r*255, box.border_color.g*255, box.border_color.b*255, box.border_color.a*255),
+		QColor(box.fill_color.r*255, box.fill_color.g*255, box.fill_color.b*255, box.fill_color.a*255)
+	) ;
+}
+
+void tum::ARSlideRenderer::renderPOI(QPainter& painter, const tum_ar_window::POI& poi, const QRect& canvasArea) const {
+	if (poi.header.frame_id == _projector.getFrame()) {
+		// draw in Pixel coordinates
 		drawPoi(
 			painter,
 			QPoint(poi.position.x, poi.position.y),
@@ -51,9 +99,32 @@ QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_window::ARSlide& slide, c
 			QColor(poi.border_color.r*255, poi.border_color.g*255, poi.border_color.b*255, poi.border_color.a*255),
 			QColor(poi.fill_color.r*255, poi.fill_color.g*255, poi.fill_color.b*255, poi.fill_color.a*255)
 		) ;
+		return ;
 	}
 
-	return pixmap ;
+	geometry_msgs::PointStamped position ;
+	position.header = poi.header ;
+	position.point  = poi.position ;
+
+	geometry_msgs::Point origin = toProjectorFrame(position) ;
+	if (std::isnan(origin.x)) {
+		return ;
+	}
+
+	geometry_msgs::Point shift = origin ;
+	shift.x += poi.radius ;
+
+	QPointF center = projectToPixel(origin) ;
+	int radius = std::max((int)(projectToPixel(shift).x()-center.x()), 1) ;
+
+	drawPoi(
+		painter,
+		QPoint(center.x(), center.y()),
+		radius,
+		poi.label,
+		QColor(poi.border_color.r*255, poi.border_color.g*255, poi.border_color.b*255, poi.border_color.a*255),
+		QColor(poi.fill_color.r*255, poi.fill_color.g*255, poi.fill_color.b*255, poi.fill_color.a*255)
+	) ;
 }
 
 void tum::ARSlideRenderer::drawBackground(QPainter& painter, const std::string& instruction) {
@@ -254,4 +325,23 @@ void tum::ARSlideRenderer::drawCircleLabel(QPainter& painter, const QPoint& circ
 		// circle either covers the full screen, or is completly out of the canvas
 		// todo: draw label inside circle
 	}
+}
+
+geometry_msgs::Point tum::ARSlideRenderer::toProjectorFrame(const geometry_msgs::PointStamped& in) const {
+	geometry_msgs::PointStamped out ;
+	try{
+		_tfListener.transformPoint(_projector.getFrame(), in, out) ;
+	}
+	catch (tf::TransformException ex){
+		ROS_ERROR_STREAM_THROTTLE(1, "[ARSlideRenderer] tf error: "<<ex.what()) ;
+		out.point.x = std::numeric_limits<double>::quiet_NaN() ;
+		out.point.y = std::numeric_limits<double>::quiet_NaN() ;
+		out.point.z = std::numeric_limits<double>::quiet_NaN() ;
+	}
+	return out.point ;
+}
+
+QPointF tum::ARSlideRenderer::projectToPixel(const geometry_msgs::Point& point) const {
+	Eigen::Vector2f pixel = _projector.projectToPixel(Eigen::Vector3f(point.x, point.y, point.z)) ;
+	return QPointF(pixel.x(), pixel.y()) ;
 }

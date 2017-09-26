@@ -47,7 +47,13 @@ void tum::Projector::init(const bool publishViewFrustum, const float viewFrustum
 	_viewFrustumPub = _nh.advertise<visualization_msgs::Marker>(VIEW_FRUSTUM_TOPIC, 1) ;
 }
 
-Eigen::Matrix<float, 3, 4> tum::Projector::getImagePlane(const float dist) {
+Eigen::Vector2f tum::Projector::projectToPixel(const Eigen::Vector3f& point) const {
+	Eigen::Vector3f pixel = _k*point ;
+	//ROS_INFO_STREAM("pixel: "<<pixel.transpose()) ;
+	return Eigen::Vector2f(pixel.x()/pixel.z(), pixel.y()/pixel.z()) ;
+}
+
+Eigen::Matrix<float, 3, 4> tum::Projector::getImagePlane(const float dist) const {
 	const Eigen::Vector2f f = getFocalWidth() ;
 	const Eigen::Vector2i r = getResolution() ;
 

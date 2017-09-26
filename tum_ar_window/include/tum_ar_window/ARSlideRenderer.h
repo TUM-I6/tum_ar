@@ -16,8 +16,8 @@ namespace tum {
 			ARSlideRenderer(const Projector& projector) ;
 			virtual ~ARSlideRenderer() ;
 
-			QPixmap renderSlide(const tum_ar_window::ARSlide&) ;
-			QPixmap renderSlide(const tum_ar_window::ARSlide&, const QRect& area) ;
+			QPixmap renderSlide(const tum_ar_window::ARSlide&) const ;
+			QPixmap renderSlide(const tum_ar_window::ARSlide&, const QRect& area) const ;
 
 			static void drawBackground(QPainter& painter, const std::string& instruction="") ;
 
@@ -33,6 +33,13 @@ namespace tum {
 			const static QIcon _tumLogo ;
 			const static QIcon _tumI6Logo ;
 			const static QIcon _horseLogo ;
+
+		protected:
+			void renderPOI(QPainter& painter, const tum_ar_window::POI& poi, const QRect& canvasArea) const ;
+			void renderBox(QPainter& painter, const tum_ar_window::Box& box, const QRect& canvasArea) const ;
+
+			geometry_msgs::Point toProjectorFrame(const geometry_msgs::PointStamped& point) const ;
+			QPointF projectToPixel(const geometry_msgs::Point& point) const ;
 			
 		private:
 			const Projector& _projector ;

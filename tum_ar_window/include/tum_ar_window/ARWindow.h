@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QPushButton>
 #include <QMessageBox>
+#include <QGraphicsScene>
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <tum_ar_window/ARInspectionAction.h>
@@ -12,6 +13,7 @@
 #include <tum_ar_window/InspectionResult.h>
 #include <actionlib/server/simple_action_server.h>
 #include <vector>
+#include <memory>
 
 namespace Ui {
 	class ARWindow ;
@@ -43,7 +45,8 @@ namespace tum {
 		private:
 			ros::NodeHandle _nh ;
 			ros::Publisher _userInputPub ;
-			Ui::ARWindow *_ui ;
+			std::unique_ptr<Ui::ARWindow> _ui ;
+			std::unique_ptr<QGraphicsScene> _scene ;
 	};
 }
 

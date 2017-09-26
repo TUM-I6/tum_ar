@@ -3,23 +3,23 @@
 #include <ui_ARWindow.h>
 #include <QtSvg>
 
-tum::ARWindow::ARWindow(QWidget *parent) :
- QMainWindow(parent),
- _ui(new Ui::ARWindow) {
-	_ui->setupUi(this);
+tum::ARWindow::ARWindow(QWidget *parent)
+ : QMainWindow(parent),
+   _ui(new Ui::ARWindow),
+   _scene(new QGraphicsScene) {
+	_ui->setupUi(this) ;
 	setWindowTitle("AR Window") ;
-	QObject::connect(_ui->pushButtonAccept, SIGNAL(clicked()),this, SLOT(pushButtonAcceptClicked()));
-	QObject::connect(_ui->pushButtonReject, SIGNAL(clicked()),this, SLOT(pushButtonRejectClicked()));
+	QObject::connect(_ui->pushButtonAccept, SIGNAL(clicked()),this, SLOT(pushButtonAcceptClicked())) ;
+	QObject::connect(_ui->pushButtonReject, SIGNAL(clicked()),this, SLOT(pushButtonRejectClicked())) ;
 
 	_userInputPub = _nh.advertise<tum_ar_window::InspectionResult>("user_input", 10) ;
 
-	QGraphicsScene* scene = new QGraphicsScene ;
-	_ui->arDisplay->setScene(scene) ;
+	_ui->arDisplay->setScene(_scene.get()) ;
 	_ui->arDisplay->show() ;
 }
 
 tum::ARWindow::~ARWindow() {
-	delete _ui ;
+	//delete _ui ;
 }
 
 void tum::ARWindow::display(const std::string& url) {
@@ -28,13 +28,12 @@ void tum::ARWindow::display(const std::string& url) {
 }
 
 void tum::ARWindow::display(const QPixmap& pixmap) {
-	QGraphicsScene* scene = _ui->arDisplay->scene() ;
-	QList<QGraphicsItem*> items = scene->items() ;
+	QList<QGraphicsItem*> items = _scene->items() ;
 	for (int i = 0; i < items.size(); i++) {
-		scene->removeItem(items[i]);
+		_scene->removeItem(items[i]);
 		delete items[i];
 	}
-	scene->addPixmap(pixmap);
+	_scene->addPixmap(pixmap);
 }
 
 int tum::ARWindow::canvasWidth() const {

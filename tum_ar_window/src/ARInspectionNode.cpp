@@ -1,13 +1,22 @@
 #include <tum_ar_window/ARInspectionNode.h>
+#include <tum_ar_window/ConfigReader.h>
+#include <ros/package.h>
 
-tum::ARInspectionNode::ARInspectionNode(int argc, char *argv[])
+tum::ARInspectionNode::ARInspectionNode(QApplication& qa)
 : _projector(_nh),
   _renderer(_projector),
-  _qApp(argc, argv),
-  _actionServer(_nh, "ar_inspection", false) {
+  _actionServer(_nh, "ar_inspection", false),
+  _qa(qa) {
+  	//_qApp.processEvents() ;
+
 	_window.showFullScreen() ;
 	_blankSlide.instruction = "" ;
-	_slides = loadSlides("") ;
+
+	//_slides = loadSlides("") ;
+
+	std::string configFileName ;
+	_nh.param<std::string>("task_description", configFileName, ros::package::getPath("tum_ar_window")+"/config/config.yaml") ;
+	_slides = ConfigReader::readConfigFile(configFileName) ;
 
 	_userInputSub = _nh.subscribe("user_input", 10, &ARInspectionNode::userInputCallback, this) ;
 	_actionServer.registerGoalCallback(boost::bind(&ARInspectionNode::executeARInspection, this));
@@ -18,16 +27,19 @@ tum::ARInspectionNode::~ARInspectionNode() {
 }
 
 void tum::ARInspectionNode::run() {
-	//sleep(2) ;
-	ros::Rate rate(50) ;
+	ros::Rate rate(30) ;
 
+	QPixmap slide ;
 	while(ros::ok() && _window.isVisible()) {
-		// qt stuff
-		_qApp.processEvents() ;
+		// process events and messages
+		if (_qa.hasPendingEvents()) {
+			_qa.processEvents() ;
+		}
+		ros::spinOnce() ;
+
+		// render new image
 		QRect canvas = _window.canvasArea() ;
-		QPixmap slide ;
 		if (_taskActive) {
-			//ROS_INFO_STREAM("Task active") ;
 			slide = _renderer.renderSlide(_slides[_step], canvas) ;
 		}
 		else {
@@ -35,8 +47,7 @@ void tum::ARInspectionNode::run() {
 		}
 		_window.display(slide) ;
 
-		// ros stuff
-		ros::spinOnce() ;
+		// other stuff
 		_projector.publishViewFrustumMarker(_projector.getImagePlane(2.05f)) ;
 		rate.sleep() ;
 	}

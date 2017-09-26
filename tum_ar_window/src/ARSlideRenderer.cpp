@@ -24,6 +24,7 @@ QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_window::ARSlide& slide) {
 }
 
 QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_window::ARSlide& slide, const QRect& area) {
+	//ROS_INFO_STREAM("[ARSlideRenderer:"<<__LINE__<<"]") ;
 	QPixmap pixmap(area.width(), area.height()) ;
 	pixmap.fill(Qt::transparent) ;
 	QPainter painter(&pixmap) ;

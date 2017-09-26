@@ -32,6 +32,7 @@ find_package(Boost REQUIRED COMPONENTS filesystem)
 find_package (Qt5Widgets REQUIRED)
 find_package (Qt5Svg REQUIRED)
 find_package (Qt5Gui REQUIRED)
+find_package (yaml-cpp REQUIRED)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -141,6 +142,7 @@ include_directories(
 	${catkin_INCLUDE_DIRS}
 	${Boost_INCLUDE_DIRS}
 	${EIGEN3_INCLUDE_DIRS}
+	${YAML_CPP_INCLUDE_DIR}
 	# ${OpenCV_INCLUDE_DIRS}
 )
 
@@ -149,6 +151,7 @@ set (
 		src/ARWindow.cpp
 		src/ARSlideRenderer.cpp
 		src/ARInspectionNode.cpp
+		src/ConfigReader.cpp
 		src/Projector.cpp
 )
 
@@ -187,6 +190,7 @@ target_link_libraries(
 		Qt5::Widgets
 		Qt5::Svg
 		Qt5::Gui
+		${YAML_CPP_LIBRARIES}
 )
 
 ## Add cmake target dependencies of the library

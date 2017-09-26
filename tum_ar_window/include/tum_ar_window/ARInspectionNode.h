@@ -13,7 +13,7 @@
 namespace tum {
 	class ARInspectionNode {
 		public:
-			ARInspectionNode(int argc, char *argv[]) ;
+			ARInspectionNode(QApplication& qa) ;
 			virtual ~ARInspectionNode() ;
 
 			void run() ;
@@ -32,7 +32,8 @@ namespace tum {
 			ros::NodeHandle _nh ;
 			ros::Subscriber _userInputSub ;
 			actionlib::SimpleActionServer<tum_ar_window::ARInspectionAction> _actionServer ;
-			QApplication _qApp ;
+			//QCoreApplication* _qApp ;
+			QApplication& _qa ;
 			ARWindow _window ;
 			Projector _projector ;
 			ARSlideRenderer _renderer ;

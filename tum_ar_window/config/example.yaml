@@ -1,0 +1,49 @@
+# Example for an AR Inspection task
+---
+slides:
+    
+  - instruction: "Look at the three points"
+    boxes:
+      - frame_id: "table_center"
+        position: {x: 0.0, y: 0.0, z: 0.0}
+        width: 50
+        height: 50
+        border_color: {r: 0.0, g: 0.0, b: 1.0, a: 1.0}
+        fill_color: {r: 0.0, g: 0.0, b: 0.0, a: 0.0}
+        label: ""
+    pois:
+      - frame_id: "table_center"
+        position: {x: 0.0, y: 0.0, z: 0.0}
+        radius: 100
+        border_color: {r: 1.0, g: 0.0, b: 0.0, a: 1.0}
+        fill_color: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
+        label: "left"
+      - frame_id: "table_center"
+        position: {x: 20, y: 0.0, z: 0.0}
+        radius: 50
+        border_color: {r: 1.0, g: 0.0, b: 0.0, a: 1.0}
+        fill_color: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
+        label: "right"
+
+  - instruction: "Look at the rectangles"
+    boxes:
+      - frame_id: "table_center"
+        position: {x: 0.0, y: 0.0, z: 0.0}
+        width: 50
+        height: 50
+        border_color: {r: 0.0, g: 0.0, b: 1.0, a: 1.0}
+        fill_color: {r: 0.0, g: 0.0, b: 0.0, a: 0.0}
+        label: ""
+    pois:
+      - frame_id: "table_center"
+        position: {x: 0.0, y: 0.0, z: 0.0}
+        radius: 100
+        border_color: {r: 1.0, g: 0.0, b: 0.0, a: 1.0}
+        fill_color: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
+        label: "left"
+      - frame_id: "table_center"
+        position: {x: 0.20, y: 0.0, z: 0.0}
+        radius: 50
+        border_color: {r: 1.0, g: 0.0, b: 0.0, a: 1.0}
+        fill_color: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
+        label: "right"

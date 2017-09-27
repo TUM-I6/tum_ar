@@ -12,7 +12,7 @@ tum::ARWindow::ARWindow(QWidget *parent)
 	QObject::connect(_ui->pushButtonAccept, SIGNAL(clicked()),this, SLOT(pushButtonAcceptClicked())) ;
 	QObject::connect(_ui->pushButtonReject, SIGNAL(clicked()),this, SLOT(pushButtonRejectClicked())) ;
 
-	_userInputPub = _nh.advertise<tum_ar_window::InspectionResult>("user_input", 10) ;
+	_userInputPub = _nh.advertise<tum_ar_window::InspectionResult>("user_input", 1) ;
 
 	_ui->arDisplay->setScene(_scene.get()) ;
 	_ui->arDisplay->show() ;

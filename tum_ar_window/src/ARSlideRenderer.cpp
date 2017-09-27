@@ -141,7 +141,7 @@ void tum::ARSlideRenderer::drawBackground(QPainter& painter) {
 	painter.setPen(myPen) ;
 	painter.setFont(INFO_FONT) ;
 
-	std::string nodeName = ros::this_node::getName()+ros::this_node::getNamespace() ;
+	std::string nodeName = ros::this_node::getName() ; // ros::this_node::getNamespace()+ros::this_node::getName() ;
 	std::string time = tum::Toolbox::getDateTimeString("%H:%M") ;
 	painter.drawText(QRect(QPoint(offset, painter.device()->height()/2), QPoint(painter.device()->width()/2, painter.device()->height()-offset)), Qt::AlignLeft|Qt::AlignBottom, nodeName.c_str()) ;
 	painter.drawText(QRect(QPoint(painter.device()->width()/2, painter.device()->height()/2), QPoint(painter.device()->width()-offset, painter.device()->height()-offset)), Qt::AlignRight|Qt::AlignBottom, time.c_str()) ;

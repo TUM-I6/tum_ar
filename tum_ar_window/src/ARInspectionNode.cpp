@@ -2,6 +2,8 @@
 #include <tum_ar_window/ConfigReader.h>
 #include <ros/package.h>
 
+#define ROS_PACKAGE_NAME "tum_ar_window"
+
 tum::ARInspectionNode::ARInspectionNode(QApplication& qa)
 : _projector(_nh),
   _renderer(_projector),
@@ -13,7 +15,11 @@ tum::ARInspectionNode::ARInspectionNode(QApplication& qa)
 
 	bool autostart ;
 	_nh.param<bool>("autostart", autostart, false) ;
-	_nh.param<std::string>("task_description", _taskDescriptionFile, ros::package::getPath("tum_ar_window")+"/config/config.yaml") ;
+	_nh.param<std::string>("task_description", _taskDescriptionFile, ros::package::getPath(ROS_PACKAGE_NAME)+"/config/config.yaml") ;
+
+	if (_taskDescriptionFile[0] != '/') {
+		_taskDescriptionFile = ros::package::getPath(ROS_PACKAGE_NAME)+"/"+_taskDescriptionFile ;
+	}
 
 	if (autostart) {
 		ROS_INFO_STREAM("[ARInspectionNode] Auto-starting task without goal...") ;
@@ -78,7 +84,12 @@ void tum::ARInspectionNode::executeARInspection() { // const tum_ar_window::ARIn
 		_slides = goal->slides ;
 	}
 	else if (goal->task_description_file != "") {
-		_slides = ConfigReader::readConfigFile(goal->task_description_file) ;
+		if (goal->task_description_file[0] == '/') {
+			_slides = ConfigReader::readConfigFile(goal->task_description_file) ;
+		}
+		else {
+			_slides = ConfigReader::readConfigFile(ros::package::getPath(ROS_PACKAGE_NAME)+"/"+goal->task_description_file) ;
+		}
 	}
 	else {
 		ROS_WARN_STREAM("[ARInspectionNode] No slides specified. Loading task description from "<<_taskDescriptionFile) ;
@@ -153,6 +164,7 @@ void tum::ARInspectionNode::userInputCallback(const tum_ar_window::InspectionRes
 		return ;
 	}
 
+	//ROS_INFO_STREAM("[ARInspectionNode] user input received") ;
 	publishFeedback(_step, msg->status) ;
 
 	switch(msg->status) {

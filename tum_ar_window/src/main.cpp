@@ -1,28 +1,19 @@
-#include <tum_ar_window/mainwindow.h>
+#include <tum_ar_window/ARInspectionNode.h>
+#include <tum_ar_window/ARWindow.h>
 #include <QApplication>
 #include <ros/ros.h>
 
 int main(int argc, char *argv[]) {
+
 	ROS_INFO("[ar_window] Starting ar_window") ;
 
-	ros::init(argc, argv, "ar_window");
-	ros::NodeHandle nh ;
+	// Qt must be instanciated before ROS
+	QApplication qa(argc, argv) ;
+	ros::init(argc, argv, "ar_window") ;
 
-	QApplication a(argc, argv);
-	MainWindow w;
-	//w.show();
-	w.showFullScreen();
-
-	w.displayImage("/home/arne/data/sandbox/catkin_ws/src/ar_window/images/blank.png") ;
-
-	ros::Rate rate(50) ;
-	while(ros::ok() && w.isVisible()) {
-		a.processEvents();
-		ros::spinOnce() ;
-		rate.sleep() ;
-	}
-
-	//a.processEvents();
+	tum::ARInspectionNode node(qa) ;
+	node.run() ;
 
 	ROS_INFO("[ar_window] Exiting...") ;
+	return 0;
 }

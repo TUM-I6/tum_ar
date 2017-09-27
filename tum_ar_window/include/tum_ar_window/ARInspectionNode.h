@@ -19,13 +19,15 @@ namespace tum {
 			void run() ;
 			void executeARInspection() ;
 			void userInputCallback(const tum_ar_window::InspectionResult::ConstPtr& msg) ;
-			static std::vector<tum_ar_window::ARSlide> loadSlides(const std::string& file) ;
+
+			//static std::vector<tum_ar_window::ARSlide> loadSlides(const std::string& file) ;
 
 		private:
 			void publishFeedback(unsigned int slide, unsigned char status) {
 				tum_ar_window::ARInspectionFeedback feedback ;
-				feedback.poi = slide ;
-				feedback.status = status ;
+				feedback.slide = slide ;
+				feedback.slides = _slides.size() ;
+				feedback.result.status = status ;
 				_actionServer.publishFeedback(feedback) ;
 			}
 
@@ -38,10 +40,12 @@ namespace tum {
 			Projector _projector ;
 			ARSlideRenderer _renderer ;
 
+			std::string _taskDescriptionFile ;
+
 			std::vector<tum_ar_window::ARSlide> _slides ;
 			tum_ar_window::ARSlide _blankSlide ;
 			int _step = 0 ;
-			bool _taskActive = true ;
+			bool _taskActive = false ;
 	} ;
 } ;
 

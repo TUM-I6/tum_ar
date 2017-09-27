@@ -7,16 +7,19 @@ tum::ARInspectionNode::ARInspectionNode(QApplication& qa)
   _renderer(_projector),
   _actionServer(_nh, "ar_inspection", false),
   _qa(qa) {
-  	//_qApp.processEvents() ;
 
 	_window.showFullScreen() ;
 	_blankSlide.instruction = "" ;
 
-	//_slides = loadSlides("") ;
+	bool autostart ;
+	_nh.param<bool>("autostart", autostart, false) ;
+	_nh.param<std::string>("task_description", _taskDescriptionFile, ros::package::getPath("tum_ar_window")+"/config/config.yaml") ;
 
-	std::string configFileName ;
-	_nh.param<std::string>("task_description", configFileName, ros::package::getPath("tum_ar_window")+"/config/config.yaml") ;
-	_slides = ConfigReader::readConfigFile(configFileName) ;
+	if (autostart) {
+		ROS_INFO_STREAM("[ARInspectionNode] Auto-starting task without goal...") ;
+		_taskActive = true ;
+		_slides = ConfigReader::readConfigFile(_taskDescriptionFile) ;
+	}
 
 	_userInputSub = _nh.subscribe("user_input", 10, &ARInspectionNode::userInputCallback, this) ;
 	_actionServer.registerGoalCallback(boost::bind(&ARInspectionNode::executeARInspection, this));
@@ -40,7 +43,13 @@ void tum::ARInspectionNode::run() {
 		// render new image
 		QRect canvas = _window.canvasArea() ;
 		if (_taskActive) {
-			slide = _renderer.renderSlide(_slides[_step], canvas) ;
+			if (_step > _slides.size()) {
+				ROS_ERROR_STREAM_THROTTLE(1, "[ARInspectionNode] Slide index is out of bounds! Did you load any slides?") ;
+				slide = _renderer.renderSlide(_blankSlide, canvas) ;
+			}
+			else {
+				slide = _renderer.renderSlide(_slides[_step], canvas) ;
+			}
 		}
 		else {
 			slide = _renderer.renderSlide(_blankSlide, canvas) ;
@@ -55,17 +64,32 @@ void tum::ARInspectionNode::run() {
 
 void tum::ARInspectionNode::executeARInspection() { // const tum_ar_window::ARInspectionGoalConstPtr &goal
 	if (_taskActive) {
-		// todo: cancel old goal
+			// abort current goal
+			tum_ar_window::ARInspectionResult result ;
+			result.result.status = tum_ar_window::InspectionResult::TASK_ABORTED ;
+			_actionServer.setAborted(result) ;
 	}
 
 	tum_ar_window::ARInspectionGoalConstPtr goal = _actionServer.acceptNewGoal() ;
 	_step = 0 ;
+	_taskActive = true ;
+
+	if (goal->slides.size() > 0) {
+		_slides = goal->slides ;
+	}
+	else if (goal->task_description_file != "") {
+		_slides = ConfigReader::readConfigFile(goal->task_description_file) ;
+	}
+	else {
+		ROS_WARN_STREAM("[ARInspectionNode] No slides specified. Loading task description from "<<_taskDescriptionFile) ;
+		_slides = ConfigReader::readConfigFile(_taskDescriptionFile) ;
+	}
 
 	// publish info to the console for the user
 	ROS_INFO_STREAM("[tum_ar_window] Running AR inspection based on "<<_slides.size()<<" slides") ;
 }
 
-std::vector<tum_ar_window::ARSlide> tum::ARInspectionNode::loadSlides(const std::string& file) {
+/*std::vector<tum_ar_window::ARSlide> tum::ARInspectionNode::loadSlides(const std::string& file) {
 	std::vector<tum_ar_window::ARSlide> slides ;
 
 	std::function<tum_ar_window::POI (int, int, int, const std::string&)> poi = [](int x, int y, int radius, const std::string& label="") {
@@ -122,7 +146,7 @@ std::vector<tum_ar_window::ARSlide> tum::ARInspectionNode::loadSlides(const std:
 	slides.push_back(slide2) ;
 
 	return slides ;
-}
+}*/
 
 void tum::ARInspectionNode::userInputCallback(const tum_ar_window::InspectionResult::ConstPtr& msg) {
 	if(!_taskActive) {
@@ -136,7 +160,7 @@ void tum::ARInspectionNode::userInputCallback(const tum_ar_window::InspectionRes
 			_step++ ;
 			if (_step >= _slides.size()) {
 				tum_ar_window::ARInspectionResult result ;
-				result.status = tum_ar_window::ARInspectionResult::ACCEPTED ;
+				result.result.status = tum_ar_window::InspectionResult::ACCEPTED ;
 				_actionServer.setSucceeded(result);
 
 				_taskActive = false ;
@@ -148,7 +172,7 @@ void tum::ARInspectionNode::userInputCallback(const tum_ar_window::InspectionRes
 			// todo implement different procedures
 		case tum_ar_window::InspectionResult::REWORK : {
 			tum_ar_window::ARInspectionResult result ;
-			result.status = tum_ar_window::ARInspectionResult::REJECTED ;
+			result.result.status = msg->status ;
 			_actionServer.setSucceeded(result);
 			
 			_taskActive = false ;

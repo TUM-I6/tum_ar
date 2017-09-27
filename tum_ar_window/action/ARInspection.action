@@ -1,28 +1,25 @@
 # Goal
 
-# id of the WSA to run inspection on
-string wsa_type
+# Slides to show
+tum_ar_window/ARSlide[] slides
 
-# Numbers POIs to inspect. Inspect all if empty
-uint32[] pois
+# alternatively: name of file to load slides from
+string task_description_file
 
 ---
 # Result
 
 # Result of inspection
-uint8 status
-
-uint8 REJECTED = 0
-uint8 ACCEPTED = 1
+tum_ar_window/InspectionResult result
 
 ---
 # Feedback
 
-# ID of POI that has been inspected
-uint32 poi
+# Number of Slide that has been inspected
+uint32 slide
+
+# Number of checks that need to be performed
+uint32 slides
 
 # Result of inspection
-uint8 status
-
-uint8 REJECTED = 0
-uint8 ACCEPTED = 1
+tum_ar_window/InspectionResult result

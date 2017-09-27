@@ -13,16 +13,26 @@ add_compile_options(-std=c++11)
 ## is used, also find other catkin packages
 find_package(
 	catkin REQUIRED COMPONENTS
+		actionlib
+		geometry_msgs
 		roscpp
 		roslib
-		actionlib
+		message_generation
+		tf
+		visualization_msgs
 )
 
 ## System dependencies are found with CMake's conventions
 # find_package(Boost REQUIRED COMPONENTS system)
 
+find_package(Eigen3 REQUIRED)
+find_package(OpenCV REQUIRED)
+find_package(Boost REQUIRED COMPONENTS filesystem)
 # Find the QtWidgets library
-find_package (Qt5Widgets)
+find_package (Qt5Widgets REQUIRED)
+find_package (Qt5Svg REQUIRED)
+find_package (Qt5Gui REQUIRED)
+find_package (yaml-cpp REQUIRED)
 
 ## Uncomment this if the package has a setup.py. This macro ensures
 ## modules and global scripts declared therein get installed
@@ -54,11 +64,13 @@ find_package (Qt5Widgets)
 ##   * add every package in MSG_DEP_SET to generate_messages(DEPENDENCIES ...)
 
 ## Generate messages in the 'msg' folder
-# add_message_files(
-#   FILES
-#   Message1.msg
-#   Message2.msg
-# )
+add_message_files(
+	FILES
+		Box.msg
+		POI.msg
+		ARSlide.msg
+		InspectionResult.msg
+)
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -77,6 +89,7 @@ add_action_files(
 generate_messages(
 	DEPENDENCIES
 		std_msgs  # Or other packages containing msgs
+		geometry_msgs
 		actionlib_msgs
 )
 
@@ -112,7 +125,9 @@ generate_messages(
 catkin_package(
 	# INCLUDE_DIRS include
 	# LIBRARIES tum_ar_window
-	# CATKIN_DEPENDS roscpp
+	CATKIN_DEPENDS
+		# roscpp
+		message_runtime
 	# DEPENDS system_lib
 )
 
@@ -125,15 +140,28 @@ catkin_package(
 include_directories(
 	include
 	${catkin_INCLUDE_DIRS}
+	${Boost_INCLUDE_DIRS}
+	${EIGEN3_INCLUDE_DIRS}
+	${YAML_CPP_INCLUDE_DIR}
+	# ${OpenCV_INCLUDE_DIRS}
 )
 
-set (MyProjectLib_src src/mainwindow.cpp)
-set (MyProjectLib_hdr include/tum_ar_window/mainwindow.h)
-set (MyProjectLib_ui  ui/mainwindow.ui)
+set (
+	MyProjectLib_src
+		src/ARWindow.cpp
+		src/ARSlideRenderer.cpp
+		src/ARInspectionNode.cpp
+		src/ConfigReader.cpp
+		src/Projector.cpp
+)
+
+set (MyProjectLib_hdr include/tum_ar_window/ARWindow.h)
+set (MyProjectLib_ui  ui/ARWindow.ui)
+
 set (MyProjectBin_src src/main.cpp)
 
 #qt5_wrap_cpp(${PROJECT_SOURCE_DIR}/ui/moc_test.h ${MyProjectLib_hdr})
-#qt5_wrap_ui (${PROJECT_SOURCE_DIR}/ui/ui_mainwindow.h  ${MyProjectLib_ui})
+#qt5_wrap_ui (${PROJECT_SOURCE_DIR}/ui/ui_ARWindow.h  ${MyProjectLib_ui})
 
 qt5_wrap_cpp(MyProjectLib_hdr_moc ${MyProjectLib_hdr})
 qt5_wrap_ui (MyProjectLib_ui_moc  ${MyProjectLib_ui})
@@ -157,7 +185,12 @@ add_library(${PROJECT_NAME}_lib SHARED
 target_link_libraries(
 	${PROJECT_NAME}_lib
 		${catkin_LIBRARIES}
+		${Boost_LIBRARIES}
+		# ${OpenCV_LIBS}
 		Qt5::Widgets
+		Qt5::Svg
+		Qt5::Gui
+		${YAML_CPP_LIBRARIES}
 )
 
 ## Add cmake target dependencies of the library
@@ -197,6 +230,7 @@ target_link_libraries(
 	${PROJECT_NAME}_node
 		# ${catkin_LIBRARIES}
 		Qt5::Widgets
+		Qt5::Svg
 		${PROJECT_NAME}_lib
 )
 

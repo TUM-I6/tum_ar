@@ -10,10 +10,12 @@
 #define TEXTBOX_MIN_HSPACE 512
 #define TEXTBOX_MIN_VSPACE 128
 
-const QFont tum::ARSlideRenderer::_font = QFont("TUM Neue Helvetica", 18) ;
-const QIcon tum::ARSlideRenderer::_tumLogo(QString(ros::package::getPath("tum_ar_window").c_str()) + "/images/tum.svg") ;
-const QIcon tum::ARSlideRenderer::_tumI6Logo(QString(ros::package::getPath("tum_ar_window").c_str()) + "/images/tum_i6.svg") ;
-const QIcon tum::ARSlideRenderer::_horseLogo(QString(ros::package::getPath("tum_ar_window").c_str()) + "/images/horse.svg") ;
+const QFont tum::ARSlideRenderer::INFO_FONT = QFont("TUM Neue Helvetica", 16) ;
+const QFont tum::ARSlideRenderer::INSTRUCTION_FONT = QFont("TUM Neue Helvetica", 20) ;
+
+const QIcon tum::ARSlideRenderer::TUM_LOGO(QString(ros::package::getPath("tum_ar_window").c_str()) + "/images/tum.svg") ;
+const QIcon tum::ARSlideRenderer::TUM_I6_LOGO(QString(ros::package::getPath("tum_ar_window").c_str()) + "/images/tum_i6.svg") ;
+const QIcon tum::ARSlideRenderer::HORSE_LOGO(QString(ros::package::getPath("tum_ar_window").c_str()) + "/images/horse.svg") ;
 
 tum::ARSlideRenderer::ARSlideRenderer(const Projector& projector)
 : _projector(projector) {
@@ -32,7 +34,7 @@ QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_window::ARSlide& slide, c
 	pixmap.fill(Qt::transparent) ;
 	QPainter painter(&pixmap) ;
 
-	drawBackground(painter, slide.instruction) ;
+	drawBackground(painter) ;
 
 	for (const tum_ar_window::Box& box : slide.boxes) {
 		renderBox(painter, box, area) ;
@@ -41,6 +43,8 @@ QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_window::ARSlide& slide, c
 	for (const tum_ar_window::POI& poi : slide.pois) {
 		renderPOI(painter, poi, area) ;
 	}
+
+	drawInstruction(painter, slide.instruction) ;
 
 	return pixmap ;
 }
@@ -127,7 +131,7 @@ void tum::ARSlideRenderer::renderPOI(QPainter& painter, const tum_ar_window::POI
 	) ;
 }
 
-void tum::ARSlideRenderer::drawBackground(QPainter& painter, const std::string& instruction) {
+void tum::ARSlideRenderer::drawBackground(QPainter& painter) {
 	int offset = 64 ;
 
 	drawCornerBox(painter, QPoint(0,0), QSize(painter.device()->width(), painter.device()->height())) ;	
@@ -135,14 +139,30 @@ void tum::ARSlideRenderer::drawBackground(QPainter& painter, const std::string& 
 
 	QPen myPen(Qt::white, 3, Qt::SolidLine) ;
 	painter.setPen(myPen) ;
-	painter.setFont(_font) ;
+	painter.setFont(INFO_FONT) ;
 
+	std::string nodeName = ros::this_node::getName()+ros::this_node::getNamespace() ;
+	std::string time = tum::Toolbox::getDateTimeString("%H:%M") ;
+	painter.drawText(QRect(QPoint(offset, painter.device()->height()/2), QPoint(painter.device()->width()/2, painter.device()->height()-offset)), Qt::AlignLeft|Qt::AlignBottom, nodeName.c_str()) ;
+	painter.drawText(QRect(QPoint(painter.device()->width()/2, painter.device()->height()/2), QPoint(painter.device()->width()-offset, painter.device()->height()-offset)), Qt::AlignRight|Qt::AlignBottom, time.c_str()) ;
+}
+
+void tum::ARSlideRenderer::drawInstruction(QPainter& painter, const std::string& instruction) {
 	//ROS_INFO_STREAM("Instruction: "<<instruction) ;
 	if (instruction != "") {
-		painter.drawText(QRect(QPoint(offset, painter.device()->height()/2), QPoint(painter.device()->width()/2, painter.device()->height()-offset)), Qt::AlignLeft|Qt::AlignBottom, instruction.c_str()) ;
+		int offset = 64 ;
+
+		painter.setPen(QPen(Qt::white, 3, Qt::SolidLine)) ;
+		painter.setFont(INSTRUCTION_FONT) ;
+
+		painter.drawText(
+			QRect(
+				QPoint(painter.device()->width()/2-TEXTBOX_WIDTH/2, painter.device()->height()-TEXTBOX_HEIGHT-1.5*offset),
+				QSize(TEXTBOX_WIDTH, TEXTBOX_HEIGHT)
+			),
+			Qt::AlignHCenter|Qt::AlignBottom, instruction.c_str()
+		) ;
 	}
-	std::string info = tum::Toolbox::getDateTimeString("%H:%M")+"\n"+ros::this_node::getName()+ros::this_node::getNamespace() ;
-	painter.drawText(QRect(QPoint(painter.device()->width()/2, painter.device()->height()/2), QPoint(painter.device()->width()-offset, painter.device()->height()-offset)), Qt::AlignRight|Qt::AlignBottom, info.c_str()) ;
 }
 
 void tum::ARSlideRenderer::drawCornerBox(QPainter& painter, const QPoint& pos, const QSize& box, const QColor& color, const int edge, const int lineWidth) {
@@ -172,16 +192,16 @@ void tum::ARSlideRenderer::drawLogos(QPainter& painter, const QPoint& position, 
 	// draw logos
 	 
 	QPoint pos = position ;
-	QSize size = _horseLogo.actualSize(QSize(1000,logoHeight)) ;
-	painter.drawPixmap(pos.x(), pos.y(), _horseLogo.pixmap(size));
+	QSize size = HORSE_LOGO.actualSize(QSize(1000,logoHeight)) ;
+	painter.drawPixmap(pos.x(), pos.y(), HORSE_LOGO.pixmap(size));
 
 	pos.rx() += size.width() + logoHeight ;
-	size = _tumLogo.actualSize(QSize(1000,logoHeight)) ;
-	painter.drawPixmap(pos.x(), pos.y(), _tumLogo.pixmap(size));
+	size = TUM_LOGO.actualSize(QSize(1000,logoHeight)) ;
+	painter.drawPixmap(pos.x(), pos.y(), TUM_LOGO.pixmap(size));
 
 	pos.rx() += size.width() + logoHeight ;
-	size = _tumI6Logo.actualSize(QSize(1000,logoHeight)) ;
-	painter.drawPixmap(pos.x(), pos.y(), _tumI6Logo.pixmap(size));
+	size = TUM_I6_LOGO.actualSize(QSize(1000,logoHeight)) ;
+	painter.drawPixmap(pos.x(), pos.y(), TUM_I6_LOGO.pixmap(size));
 }
 
 void tum::ARSlideRenderer::drawPoi(QPainter& painter, const QPoint& position, const float radius, const std::string& label, const QColor& border, const QColor& fill) {
@@ -212,7 +232,7 @@ void tum::ARSlideRenderer::drawBoxLabel(QPainter& painter, const QPoint& positio
 	}
 
 	painter.setPen(QPen(color)) ;
-	painter.setFont(_font) ;
+	painter.setFont(INFO_FONT) ;
 
 	QPoint topLeft    (position.x(),              position.y()-offset) ;
 	QPoint topRight   (position.x()+size.width(), topLeft.y()) ;
@@ -299,7 +319,7 @@ void tum::ARSlideRenderer::drawCircleLabel(QPainter& painter, const QPoint& circ
 	bool spaceLeftV   = spaceRightV ;
 
 	painter.setPen(QPen(color)) ;
-	painter.setFont(_font) ;
+	painter.setFont(INFO_FONT) ;
 
 	if (spaceBottomH && spaceBottomV) {
 		// below, horizontally centered

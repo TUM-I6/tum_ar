@@ -19,7 +19,8 @@ namespace tum {
 			QPixmap renderSlide(const tum_ar_window::ARSlide&) const ;
 			QPixmap renderSlide(const tum_ar_window::ARSlide&, const QRect& area) const ;
 
-			static void drawBackground(QPainter& painter, const std::string& instruction="") ;
+			static void drawBackground(QPainter& painter) ;
+			static void drawInstruction(QPainter& painter, const std::string& instruction) ;
 
 			static void drawCornerBox(QPainter& painter, const QPoint& position, const QSize& boxSize, const QColor& color=Qt::white, const int edgeLenght=50, const int lineWidth=6) ;
 			static void drawLogos(QPainter& painter, const QPoint& position, const int logoHeight) ;
@@ -29,10 +30,12 @@ namespace tum {
 			static void drawBoxLabel(QPainter& painter, const QPoint& boxPosition, const QSize& boxSize, const std::string& label, const int offset, const QColor& color) ;
 			static void drawCircleLabel(QPainter& painter, const QPoint& cirlePosition, const float radius, const std::string& label, const int offset, const QColor& color) ;
 
-			const static QFont _font ;
-			const static QIcon _tumLogo ;
-			const static QIcon _tumI6Logo ;
-			const static QIcon _horseLogo ;
+			const static QFont INFO_FONT ;
+			const static QFont INSTRUCTION_FONT ;
+			
+			const static QIcon TUM_LOGO ;
+			const static QIcon TUM_I6_LOGO ;
+			const static QIcon HORSE_LOGO ;
 
 		protected:
 			void renderPOI(QPainter& painter, const tum_ar_window::POI& poi, const QRect& canvasArea) const ;

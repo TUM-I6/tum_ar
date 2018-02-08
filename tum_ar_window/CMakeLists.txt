@@ -17,7 +17,6 @@ find_package(
 		geometry_msgs
 		roscpp
 		roslib
-		message_generation
 		tf
 		visualization_msgs
 )
@@ -123,12 +122,15 @@ generate_messages(
 ## CATKIN_DEPENDS: catkin_packages dependent projects also need
 ## DEPENDS: system dependencies of this project that dependent projects also need
 catkin_package(
-	# INCLUDE_DIRS include
-	# LIBRARIES tum_ar_window
+	INCLUDE_DIRS
+		include
+	# LIBRARIES
+		# tum_ar_window
 	CATKIN_DEPENDS
 		# roscpp
 		message_runtime
-	# DEPENDS system_lib
+	# DEPENDS
+		# system_lib
 )
 
 ###########
@@ -144,10 +146,11 @@ include_directories(
 	${EIGEN3_INCLUDE_DIRS}
 	${YAML_CPP_INCLUDE_DIR}
 	# ${OpenCV_INCLUDE_DIRS}
+	${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_INCLUDE_DESTINATION}
 )
 
 set (
-	MyProjectLib_src
+	tum_ar_window_src
 		src/ARWindow.cpp
 		src/ARSlideRenderer.cpp
 		src/ARInspectionNode.cpp
@@ -155,16 +158,18 @@ set (
 		src/Projector.cpp
 )
 
-set (MyProjectLib_hdr include/tum_ar_window/ARWindow.h)
-set (MyProjectLib_ui  ui/ARWindow.ui)
+set (tum_ar_window_hdr include/tum_ar_window/ARWindow.h)
+set (tum_ar_window_ui  ui/ARWindow.ui)
 
 set (MyProjectBin_src src/main.cpp)
 
-#qt5_wrap_cpp(${PROJECT_SOURCE_DIR}/ui/moc_test.h ${MyProjectLib_hdr})
-#qt5_wrap_ui (${PROJECT_SOURCE_DIR}/ui/ui_ARWindow.h  ${MyProjectLib_ui})
+#qt5_wrap_cpp(${PROJECT_SOURCE_DIR}/ui/moc_test.h ${tum_ar_window_hdr})
+#qt5_wrap_ui (${PROJECT_SOURCE_DIR}/ui/ui_ARWindow.h  ${tum_ar_window_ui})
 
-qt5_wrap_cpp(MyProjectLib_hdr_moc ${MyProjectLib_hdr})
-qt5_wrap_ui (MyProjectLib_ui_moc  ${MyProjectLib_ui})
+set(CMAKE_CURRENT_BINARY_DIR "${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_INCLUDE_DESTINATION}")
+
+qt5_wrap_cpp(tum_ar_window_hdr_moc ${tum_ar_window_hdr})
+qt5_wrap_ui (tum_ar_window_ui_moc  ${tum_ar_window_ui})
 
 
 include_directories (src)
@@ -177,9 +182,9 @@ include_directories (${CMAKE_BINARY_DIR}/tum_ar/${PROJECT_NAME})
 
 ## Declare a C++ library
 add_library(${PROJECT_NAME}_lib SHARED
-	${MyProjectLib_src}
-    ${MyProjectLib_hdr_moc}
-    ${MyProjectLib_ui_moc}
+	${tum_ar_window_src}
+	${tum_ar_window_hdr_moc}
+	${tum_ar_window_ui_moc}
 )
 
 target_link_libraries(
@@ -196,6 +201,7 @@ target_link_libraries(
 ## Add cmake target dependencies of the library
 ## as an example, code may need to be generated before libraries
 ## either from message generation or dynamic reconfigure
+
 add_dependencies(
 	${PROJECT_NAME}_lib
 	${${PROJECT_NAME}_EXPORTED_TARGETS}

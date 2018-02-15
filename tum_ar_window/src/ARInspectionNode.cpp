@@ -27,7 +27,7 @@ tum::ARInspectionNode::ARInspectionNode(QApplication& qa)
 		_slides = ConfigReader::readConfigFile(_taskDescriptionFile) ;
 	}
 
-	_userInputSub = _nh.subscribe("user_input", 10, &ARInspectionNode::userInputCallback, this) ;
+	_userInputSub = _nh.subscribe("user_input", 10, &ARInspectionNode::userInputCallback, this);
 	_actionServer.registerGoalCallback(boost::bind(&ARInspectionNode::executeARInspection, this));
 	_actionServer.start() ;
 }

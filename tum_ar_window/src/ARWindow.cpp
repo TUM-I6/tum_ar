@@ -19,7 +19,9 @@ tum::ARWindow::ARWindow(QWidget *parent)
 }
 
 tum::ARWindow::~ARWindow() {
-	//delete _ui ;
+	if (isVisible()) {
+		close() ;
+	}
 }
 
 void tum::ARWindow::display(const std::string& url) {

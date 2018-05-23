@@ -30,6 +30,8 @@ namespace tum {
 			void display(const std::string& url) ;
 			void display(const QPixmap& pixmap) ;
 
+			void hideButtons();
+
 			int canvasWidth() const ;
 			int canvasHeight() const ;
 			QSize canvasSize() const ;

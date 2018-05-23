@@ -34,7 +34,7 @@ border-style: none ;</string>
      </widget>
     </item>
     <item>
-     <layout class="QHBoxLayout" name="horizontalLayout">
+     <layout class="QHBoxLayout" name="buttonBar">
       <property name="spacing">
        <number>5</number>
       </property>

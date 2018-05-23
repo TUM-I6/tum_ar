@@ -15,10 +15,17 @@ tum::ARInspectionNode::ARInspectionNode(QApplication& qa)
 
 	bool autostart ;
 	_nh.param<bool>("autostart", autostart, false) ;
+	bool hide_buttons ;
+	_nh.param<bool>("hide_buttons", hide_buttons, false) ;
+
 	_nh.param<std::string>("task_description", _taskDescriptionFile, ros::package::getPath(ROS_PACKAGE_NAME)+"/config/config.yaml") ;
 
 	if (_taskDescriptionFile[0] != '/') {
 		_taskDescriptionFile = ros::package::getPath(ROS_PACKAGE_NAME)+"/"+_taskDescriptionFile ;
+	}
+
+	if (hide_buttons) {
+		_window.hideButtons();
 	}
 
 	if (autostart) {

@@ -150,7 +150,7 @@ include_directories(
 )
 
 set (
-	tum_ar_window_src
+	${PROJECT_NAME}_lib_src
 		src/ARWindow.cpp
 		src/ARSlideRenderer.cpp
 		src/ARInspectionNode.cpp
@@ -158,18 +158,18 @@ set (
 		src/Projector.cpp
 )
 
-set (tum_ar_window_hdr include/tum_ar_window/ARWindow.h)
-set (tum_ar_window_ui  ui/ARWindow.ui)
+set (${PROJECT_NAME}_hdr include/tum_ar_window/ARWindow.h)
+set (${PROJECT_NAME}_ui  ui/ARWindow.ui)
 
-set (MyProjectBin_src src/main.cpp)
+set (${PROJECT_NAME}_bin_src src/main.cpp)
 
-#qt5_wrap_cpp(${PROJECT_SOURCE_DIR}/ui/moc_test.h ${tum_ar_window_hdr})
-#qt5_wrap_ui (${PROJECT_SOURCE_DIR}/ui/ui_ARWindow.h  ${tum_ar_window_ui})
+#qt5_wrap_cpp(${PROJECT_SOURCE_DIR}/ui/moc_test.h ${${PROJECT_NAME}_hdr})
+#qt5_wrap_ui (${PROJECT_SOURCE_DIR}/ui/ui_ARWindow.h  ${${PROJECT_NAME}_ui})
 
 set(CMAKE_CURRENT_BINARY_DIR "${CATKIN_DEVEL_PREFIX}/${CATKIN_GLOBAL_INCLUDE_DESTINATION}")
 
-qt5_wrap_cpp(tum_ar_window_hdr_moc ${tum_ar_window_hdr})
-qt5_wrap_ui (tum_ar_window_ui_moc  ${tum_ar_window_ui})
+qt5_wrap_cpp(${PROJECT_NAME}_hdr_moc ${${PROJECT_NAME}_hdr})
+qt5_wrap_ui (${PROJECT_NAME}_ui_moc  ${${PROJECT_NAME}_ui})
 
 
 include_directories (src)
@@ -182,9 +182,9 @@ include_directories (${CMAKE_BINARY_DIR}/tum_ar/${PROJECT_NAME})
 
 ## Declare a C++ library
 add_library(${PROJECT_NAME}_lib SHARED
-	${tum_ar_window_src}
-	${tum_ar_window_hdr_moc}
-	${tum_ar_window_ui_moc}
+	${${PROJECT_NAME}_lib_src}
+	${${PROJECT_NAME}_hdr_moc}
+	${${PROJECT_NAME}_ui_moc}
 )
 
 target_link_libraries(
@@ -218,7 +218,7 @@ add_dependencies(
 
 add_executable(
 	${PROJECT_NAME}_node
-		${MyProjectBin_src}
+		${${PROJECT_NAME}_bin_src}
 )
 
 ## Rename C++ executable without prefix

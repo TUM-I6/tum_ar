@@ -27,6 +27,12 @@ void tum::ARWindow::display(const std::string& url) {
 	display(pixmap) ;
 }
 
+
+void tum::ARWindow::hideButtons() {
+	_ui->pushButtonAccept->setVisible(0);
+	_ui->pushButtonReject->setVisible(0);
+}
+
 void tum::ARWindow::display(const QPixmap& pixmap) {
 	QList<QGraphicsItem*> items = _scene->items() ;
 	for (int i = 0; i < items.size(); i++) {

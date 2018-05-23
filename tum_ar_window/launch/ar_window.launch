@@ -1,8 +1,11 @@
 <!-- Start ar projection node -->
 <launch>
 	<group ns="ar">
+		<arg name="hide_buttons" default="false"/>
+
 		<param name="task_description" value="$(find tum_ar_window)/config/example.yaml" />
 		<param name="autostart" value="false" />
+		<param name="hide_buttons" value="$(arg hide_buttons)" />
 
 		<!-- <node name="ar_window" pkg="tum_ar_window" type="tum_ar_window_node" output="screen" launch-prefix="gdb -ex run - -args" /> -->
 		<node name="ar_window" pkg="tum_ar_window" type="tum_ar_window_node" output="screen" />

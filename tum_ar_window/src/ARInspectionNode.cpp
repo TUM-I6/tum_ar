@@ -187,6 +187,7 @@ void tum::ARInspectionNode::userInputCallback(const tum_ar_window::InspectionRes
 			}
 			break ;
 		}
+		case tum_ar_window::InspectionResult::TIMEOUT :
 		case tum_ar_window::InspectionResult::REJECTED :
 			// todo implement different procedures
 		case tum_ar_window::InspectionResult::REWORK : {

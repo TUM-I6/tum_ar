@@ -4,26 +4,26 @@ slides:
 
   - instruction: "Inspect the three points"
     boxes:
-      - frame_id: "table_board_center"
+      - frame_id: "ar_projection_plane"
         position: {x: 0.0, y: -0.10, z: 0.0}
         width: 0.50
         height: 0.20
         border_color: {r: 0.0, g: 0.0, b: 1.0, a: 1.0}
         fill_color: {r: 0.0, g: 0.0, b: 0.0, a: 0.0}
     pois:
-      - frame_id: "table_board_center"
+      - frame_id: "ar_projection_plane"
         position: {x: -0.15, y: -0.10, z: 0.0}
         radius: 0.01
         border_color: {r: 1.0, g: 0.0, b: 0.0, a: 1.0}
         fill_color: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
         label: "left"
-      - frame_id: "table_board_center"
+      - frame_id: "ar_projection_plane"
         position: {x: 0.0, y: -0.10, z: 0.0}
         radius: 0.02
         border_color: {r: 1.0, g: 0.0, b: 0.0, a: 1.0}
         fill_color: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
         label: "center"
-      - frame_id: "table_board_center"
+      - frame_id: "ar_projection_plane"
         position: {x: 0.15, y: -0.10, z: 0.0}
         radius: 0.04
         border_color: {r: 1.0, g: 0.0, b: 0.0, a: 1.0}
@@ -32,32 +32,32 @@ slides:
     
   - instruction: "Check that the boxes do not touch each other"
     boxes:
-      - frame_id: "table_board_center"
+      - frame_id: "ar_projection_plane"
         position: {x: 0.0, y: -0.10, z: 0.0}
         width: 0.10
         height: 0.10
         border_color: {r: 0.0, g: 0.0, b: 1.0, a: 1.0}
         fill_color: {r: 0.0, g: 0.0, b: 0.0, a: 0.0}
         label: "inner box"
-      - frame_id: "table_board_center"
+      - frame_id: "ar_projection_plane"
         position: {x: 0.0, y: -0.10, z: 0.0}
         width: 0.15
         height: 0.15
         border_color: {r: 0.0, g: 1.0, b: 1.0, a: 1.0}
         fill_color: {r: 0.0, g: 0.0, b: 0.0, a: 0.0}
-      - frame_id: "table_board_center"
+      - frame_id: "ar_projection_plane"
         position: {x: 0.0, y: -0.10, z: 0.0}
         width: 0.20
         height: 0.20
         border_color: {r: 0.0, g: 1.0, b: 0.0, a: 1.0}
         fill_color: {r: 0.0, g: 0.0, b: 0.0, a: 0.0}
-      - frame_id: "table_board_center"
+      - frame_id: "ar_projection_plane"
         position: {x: 0.0, y: -0.10, z: 0.0}
         width: 0.25
         height: 0.25
         border_color: {r: 1.0, g: 1.0, b: 0.0, a: 1.0}
         fill_color: {r: 0.0, g: 0.0, b: 0.0, a: 0.0}
-      - frame_id: "table_board_center"
+      - frame_id: "ar_projection_plane"
         position: {x: 0.0, y: -0.10, z: 0.0}
         width: 0.30
         height: 0.30

@@ -40,8 +40,8 @@ void tum::Projector::init(const bool publishViewFrustum, const float viewFrustum
 	_projectorFrame     = projectorFrame ;
 
 	_resolution = Eigen::Vector2i(1920,1200) ;
-	_k << 2700,    0, 1920/2,
-	         0, 2700, 1200/2,
+	_k << 4100,    0, 1920/2,
+	         0, 4200, 1100/2,
 	         0,    0,      1;
 
 	_viewFrustumPub = _nh.advertise<visualization_msgs::Marker>(VIEW_FRUSTUM_TOPIC, 1) ;

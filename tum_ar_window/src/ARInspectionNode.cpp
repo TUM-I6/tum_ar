@@ -108,6 +108,8 @@ void tum::ARInspectionNode::executeARInspection() { // const tum_ar_window::ARIn
 		tum_ar_window::ARInspectionResult result ;
 		result.result.status = tum_ar_window::InspectionResult::TASK_ABORTED ;
 		_actionServer.setAborted(result) ;
+		_taskActive = false;
+		return;
 	}
 
 	// publish info to the console for the user

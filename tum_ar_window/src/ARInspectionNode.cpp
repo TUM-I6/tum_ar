@@ -103,6 +103,13 @@ void tum::ARInspectionNode::executeARInspection() { // const tum_ar_window::ARIn
 		_slides = ConfigReader::readConfigFile(_taskDescriptionFile) ;
 	}
 
+	if (_slides.size() == 0) {
+		ROS_ERROR_STREAM("[ARInspectionNode] No slides found - aborting inspection.") ;
+		tum_ar_window::ARInspectionResult result ;
+		result.result.status = tum_ar_window::InspectionResult::TASK_ABORTED ;
+		_actionServer.setAborted(result) ;
+	}
+
 	// publish info to the console for the user
 	ROS_INFO_STREAM("[tum_ar_window] Running AR inspection based on "<<_slides.size()<<" slides") ;
 }

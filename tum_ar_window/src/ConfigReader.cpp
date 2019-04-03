@@ -1,5 +1,6 @@
 #include <tum_ar_window/ConfigReader.h>
 #include <yaml-cpp/yaml.h>
+#include <fstream>
 
 std_msgs::ColorRGBA getColorRGBA(const float r, const float g, const float b, const float a) {
 	std_msgs::ColorRGBA color ;
@@ -22,23 +23,32 @@ const std::string tum::ConfigReader::POI_DEFAULT_LABEL   = "" ;
 const ros::Time tum::ConfigReader::HEADER_DEFAULT_TIME = ros::Time(0) ;
 const int tum::ConfigReader::HEADER_DEFAULT_SEQ = 0 ;
 
+bool fileExist(const char *fileName) {
+	std::ifstream infile(fileName);
+	return infile.good();
+}
+
 std::vector<tum_ar_window::ARSlide> tum::ConfigReader::readConfigFile(const std::string& fileName) {
 	ROS_INFO_STREAM("[ConfigReader] Reading "<<fileName) ;
-	YAML::Node config = YAML::LoadFile(fileName) ;
-	std::vector<tum_ar_window::ARSlide> result ;
+	std::vector<tum_ar_window::ARSlide> result;
 
-	if (!config["slides"]) {
-		ROS_ERROR_STREAM("[ConfigReader] No Slides list found!") ;
-		return result ;
+	if (fileExist(fileName.c_str())) {
+		YAML::Node config = YAML::LoadFile(fileName);
+
+		if (!config["slides"]) {
+			ROS_ERROR_STREAM("[ConfigReader] No Slides list found!");
+			return result;
+		}
+
+		for (std::size_t i = 0; i < config["slides"].size(); i++) {
+			YAML::Node slide = config["slides"][i];
+			result.push_back(readSlide(slide));
+		}
+
+		ROS_INFO_STREAM("[ConfigReader] Read " << result.size() << " slides");
 	}
 
-	for (std::size_t i=0; i<config["slides"].size(); i++) {
-		YAML::Node slide = config["slides"][i] ;
-		result.push_back(readSlide(slide)) ;
-	}
-
-	ROS_INFO_STREAM("[ConfigReader] Read "<<result.size()<<" slides") ;
-	return result ;
+	return result;
 }
 
 tum_ar_window::ARSlide tum::ConfigReader::readSlide(const YAML::Node& node) {

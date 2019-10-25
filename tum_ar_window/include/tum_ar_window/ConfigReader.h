@@ -2,7 +2,7 @@
 #define CONFIGREADER_H
 
 #include <ros/ros.h>
-#include <tum_ar_window/ARSlide.h>
+#include <tum_ar_msgs/ARSlide.h>
 
 namespace YAML {
 	class Node ;
@@ -11,7 +11,7 @@ namespace YAML {
 namespace tum {
 	class ConfigReader {
 		public:
-			static std::vector<tum_ar_window::ARSlide> readConfigFile(const std::string& fileName) ;
+			static std::vector<tum_ar_msgs::ARSlide> readConfigFile(const std::string& fileName) ;
 
 			static const std_msgs::ColorRGBA BOX_DEFAULT_BORDER_COLOR ;
 			static const std_msgs::ColorRGBA BOX_DEFAULT_FILL_COLOR ;
@@ -26,12 +26,13 @@ namespace tum {
 			static const int HEADER_DEFAULT_SEQ ;
 
 		private:
-			static tum_ar_window::ARSlide readSlide(const YAML::Node& node) ;
-			static tum_ar_window::POI readPOI(const YAML::Node& node) ;
-			static tum_ar_window::Box readBox(const YAML::Node& node) ;
-			static std_msgs::ColorRGBA readColor(const YAML::Node& node) ;
-			static std_msgs::Header readHeader(const YAML::Node& node) ;
-			static geometry_msgs::Point readPoint(const YAML::Node& node) ;
+			static tum_ar_msgs::ARSlide readSlide(const YAML::Node& node);
+			static tum_ar_msgs::POI readPOI(const YAML::Node& node);
+			static tum_ar_msgs::Box readBox(const YAML::Node& node);
+			static tum_ar_msgs::Outcome readOutcome(const YAML::Node& node);
+			static std_msgs::ColorRGBA readColor(const YAML::Node& node);
+			static std_msgs::Header readHeader(const YAML::Node& node);
+			static geometry_msgs::Point readPoint(const YAML::Node& node);
 	} ;
 } ;
 

@@ -1,0 +1,25 @@
+# Goal
+
+# Slides to show
+tum_ar_msgs/ARSlide[] slides
+
+# alternatively: name of file to load slides from
+string task_description_file
+
+---
+# Result
+
+# Result of AR task. One outcome per slide.
+tum_ar_msgs/Outcome[] outcomes
+
+---
+# Feedback
+
+# Number of Slide that has been shown
+uint32 slide
+
+# Number of slides that need to be shown
+uint32 slides
+
+# Result of inspection
+tum_ar_msgs/Outcome outcome

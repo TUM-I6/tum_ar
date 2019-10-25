@@ -18,7 +18,16 @@
     <property name="spacing">
      <number>0</number>
     </property>
-    <property name="margin">
+    <property name="leftMargin">
+     <number>0</number>
+    </property>
+    <property name="topMargin">
+     <number>0</number>
+    </property>
+    <property name="rightMargin">
+     <number>0</number>
+    </property>
+    <property name="bottomMargin">
      <number>0</number>
     </property>
     <item>
@@ -41,20 +50,6 @@ border-style: none ;</string>
       <property name="leftMargin">
        <number>0</number>
       </property>
-      <item>
-       <widget class="QPushButton" name="pushButtonReject">
-        <property name="text">
-         <string>Reject</string>
-        </property>
-       </widget>
-      </item>
-      <item>
-       <widget class="QPushButton" name="pushButtonAccept">
-        <property name="text">
-         <string>Accept</string>
-        </property>
-       </widget>
-      </item>
      </layout>
     </item>
    </layout>

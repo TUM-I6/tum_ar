@@ -28,9 +28,9 @@ bool fileExist(const char *fileName) {
 	return infile.good();
 }
 
-std::vector<tum_ar_window::ARSlide> tum::ConfigReader::readConfigFile(const std::string& fileName) {
+std::vector<tum_ar_msgs::ARSlide> tum::ConfigReader::readConfigFile(const std::string& fileName) {
 	ROS_INFO_STREAM("[ConfigReader] Reading "<<fileName) ;
-	std::vector<tum_ar_window::ARSlide> result;
+	std::vector<tum_ar_msgs::ARSlide> result;
 
 	if (fileExist(fileName.c_str())) {
 		YAML::Node config = YAML::LoadFile(fileName);
@@ -51,8 +51,8 @@ std::vector<tum_ar_window::ARSlide> tum::ConfigReader::readConfigFile(const std:
 	return result;
 }
 
-tum_ar_window::ARSlide tum::ConfigReader::readSlide(const YAML::Node& node) {
-	tum_ar_window::ARSlide slide ;
+tum_ar_msgs::ARSlide tum::ConfigReader::readSlide(const YAML::Node& node) {
+	tum_ar_msgs::ARSlide slide ;
 
 	if (node["instruction"]) {
 		slide.instruction = node["instruction"].as<std::string>() ;
@@ -71,15 +71,20 @@ tum_ar_window::ARSlide tum::ConfigReader::readSlide(const YAML::Node& node) {
 		slide.pois.push_back(readPOI(poi)) ;
 	}
 
+	for (std::size_t i=0; i<node["outcomes"].size(); i++) {
+		YAML::Node outcome = node["outcomes"][i] ;
+		slide.outcomes.push_back(readOutcome(outcome)) ;
+	}
+
 	return slide ;
 }
 
-tum_ar_window::Box tum::ConfigReader::readBox(const YAML::Node& node) {
-	tum_ar_window::Box box ;
+tum_ar_msgs::Box tum::ConfigReader::readBox(const YAML::Node& node) {
+	tum_ar_msgs::Box box ;
 
 	box.header.frame_id = node["frame_id"].as<std::string>() ;
-	box.header.stamp = HEADER_DEFAULT_TIME ;
-	box.header.seq = HEADER_DEFAULT_SEQ ;
+	box.header.stamp = HEADER_DEFAULT_TIME;
+	box.header.seq = HEADER_DEFAULT_SEQ;
 	box.position = readPoint(node["position"]) ;
 	box.width = node["width"].as<float>() ;
 	box.height = node["height"].as<float>() ;
@@ -108,8 +113,8 @@ tum_ar_window::Box tum::ConfigReader::readBox(const YAML::Node& node) {
 	return box ;
 }
 
-tum_ar_window::POI tum::ConfigReader::readPOI(const YAML::Node& node) {
-	tum_ar_window::POI poi ;
+tum_ar_msgs::POI tum::ConfigReader::readPOI(const YAML::Node& node) {
+	tum_ar_msgs::POI poi ;
 
 	poi.header.frame_id = node["frame_id"].as<std::string>() ;
 	poi.header.stamp = HEADER_DEFAULT_TIME ;
@@ -139,6 +144,14 @@ tum_ar_window::POI tum::ConfigReader::readPOI(const YAML::Node& node) {
 	}
 
 	return poi ;
+}
+
+tum_ar_msgs::Outcome tum::ConfigReader::readOutcome(const YAML::Node& node) {
+	tum_ar_msgs::Outcome outcome;
+	outcome.id = node["id"].as<unsigned int>() ;
+	outcome.type = node["type"].as<unsigned int>() ;
+	outcome.name = node["name"].as<std::string>() ;
+	return outcome ;
 }
 
 std_msgs::ColorRGBA tum::ConfigReader::readColor(const YAML::Node& node) {

@@ -3,7 +3,7 @@
 
 #include <ros/ros.h>
 #include <tf/transform_listener.h>
-#include <tum_ar_window/ARSlide.h>
+#include <tum_ar_msgs/ARSlide.h>
 #include <tum_ar_window/Projector.h>
 #include <QtCore>
 #include <QtGui>
@@ -16,8 +16,8 @@ namespace tum {
 			ARSlideRenderer(const Projector& projector) ;
 			virtual ~ARSlideRenderer() ;
 
-			QPixmap renderSlide(const tum_ar_window::ARSlide&) const ;
-			QPixmap renderSlide(const tum_ar_window::ARSlide&, const QRect& area) const ;
+			QPixmap renderSlide(const tum_ar_msgs::ARSlide&) const ;
+			QPixmap renderSlide(const tum_ar_msgs::ARSlide&, const QRect& area) const ;
 
 			static void drawBackground(QPainter& painter) ;
 			static void drawInstruction(QPainter& painter, const std::string& instruction) ;
@@ -38,8 +38,8 @@ namespace tum {
 			const static QIcon HORSE_LOGO ;
 
 		protected:
-			void renderPOI(QPainter& painter, const tum_ar_window::POI& poi, const QRect& canvasArea) const ;
-			void renderBox(QPainter& painter, const tum_ar_window::Box& box, const QRect& canvasArea) const ;
+			void renderPOI(QPainter& painter, const tum_ar_msgs::POI& poi, const QRect& canvasArea) const ;
+			void renderBox(QPainter& painter, const tum_ar_msgs::Box& box, const QRect& canvasArea) const ;
 
 			geometry_msgs::Point toProjectorFrame(const geometry_msgs::PointStamped& point) const ;
 			QPointF projectToPixel(const geometry_msgs::Point& point) const ;

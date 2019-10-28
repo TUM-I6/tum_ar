@@ -9,7 +9,9 @@ tum::ARServerNode::ARServerNode()
 	_blankSlide.instruction = "";
 
 	bool autostart;
+	float autostart_timeout;
 	_nh.param<bool>("autostart", autostart, false);
+	_nh.param<float>("autostart_timeout", autostart_timeout, 3.0);
 	_nh.param<std::string>("task_description", _taskDescriptionFile, ros::package::getPath(ROS_PACKAGE_NAME)+"/config/config.yaml");
 
 	if (_taskDescriptionFile[0] != '/') {
@@ -30,7 +32,7 @@ tum::ARServerNode::ARServerNode()
 	if (autostart) {
 		ROS_INFO_STREAM("[ARServerNode] Auto-starting task without goal...");
 
-		ros::Duration(3).sleep();
+		ros::Duration(autostart_timeout).sleep();
 		_arSlidePub.publish(_slides[_step]);
 	}
 }

@@ -25,7 +25,7 @@ namespace tum {
 
 		public:
 			explicit ARWindow(QWidget *parent = 0);
-			~ARWindow();
+			virtual ~ARWindow();
 
 			void display(const std::string& url);
 			void display(const QPixmap& pixmap);

@@ -1,0 +1,6 @@
+<launch>
+	<include file="$(find tum_touchscreen_ui)/launch/touchscreen_window.launch" />
+	<include file="$(find tum_ar_window)/launch/ar_server.launch">
+		<arg name="autostart" value="true" />
+	</include>
+</launch>

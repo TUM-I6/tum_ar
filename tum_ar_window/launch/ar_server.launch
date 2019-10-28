@@ -1,0 +1,13 @@
+<!-- Start ar server -->
+<launch>
+	<arg name="autostart" default="false"/>
+
+	<group ns="ar">
+		<param name="task_description" value="$(find tum_ar_window)/config/example.yaml" />
+		<param name="autostart" value="$(arg autostart)" />
+		<param name="autostart_timeout" value="0.5" />
+
+		<!-- <node name="ar_server" pkg="tum_ar_window" type="ar_server" output="screen" launch-prefix="gdb -ex run - -args" /> -->
+		<node name="ar_server" pkg="tum_ar_window" type="ar_server" output="screen" />
+	</group>
+</launch>

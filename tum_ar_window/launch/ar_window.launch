@@ -9,6 +9,7 @@
 		<param name="hide_buttons" value="$(arg hide_buttons)" />
 
 		<!-- <node name="ar_window" pkg="tum_ar_window" type="tum_ar_window_node" output="screen" launch-prefix="gdb -ex run - -args" /> -->
-		<node name="ar_window" pkg="tum_ar_window" type="tum_ar_window_node" output="screen" />
+		<node name="ar_window" pkg="tum_ar_window" type="ar_window" output="screen" />
+		<node name="ar_server" pkg="tum_ar_window" type="ar_server" output="screen" />
 	</group>
 </launch>

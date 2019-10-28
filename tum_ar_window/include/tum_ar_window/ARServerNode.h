@@ -1,20 +1,16 @@
-#ifndef ARINSPECTIONNODE_H
-#define ARINSPECTIONNODE_H
+#ifndef AR_SERVER_NODE_H
+#define AR_SERVER_NODE_H
 
+#include <actionlib/server/simple_action_server.h>
 #include <ros/ros.h>
 #include <string.h>
-#include <QApplication>
-#include <tum_ar_msgs/ARSlide.h>
-#include <tum_ar_window/ARSlideRenderer.h>
-#include <tum_ar_window/ARWindow.h>
-#include <tum_ar_msgs/Outcome.h>
-#include <tum_ar_window/Projector.h>
+#include <tum_ar_msgs/ARTaskAction.h>
 
 namespace tum {
-	class ARTaskNode {
+	class ARServerNode {
 		public:
-			ARTaskNode(QApplication& qa);
-			virtual ~ARTaskNode();
+			ARServerNode();
+			virtual ~ARServerNode();
 
 			void run();
 			void executeARTask();
@@ -32,14 +28,9 @@ namespace tum {
 			}
 
 			ros::NodeHandle _nh;
-			ros::Subscriber _userInputSub ;
+			ros::Subscriber _userInputSub;
+			ros::Publisher _arSlidePub;
 			actionlib::SimpleActionServer<tum_ar_msgs::ARTaskAction> _actionServer;
-			//QCoreApplication* _qApp;
-			QApplication& _qa;
-			ARWindow _window;
-			Projector _projector;
-			ARSlideRenderer _renderer;
-			bool _hideButtons;
 
 			std::string _taskDescriptionFile;
 

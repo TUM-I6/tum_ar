@@ -152,16 +152,15 @@ include_directories(
 set (
 	${PROJECT_NAME}_lib_src
 		src/ARWindow.cpp
+		src/ARWindowNode.cpp
 		src/ARSlideRenderer.cpp
-		src/ARTaskNode.cpp
+		src/ARServerNode.cpp
 		src/ConfigReader.cpp
 		src/Projector.cpp
 )
 
 set (${PROJECT_NAME}_hdr include/tum_ar_window/ARWindow.h)
 set (${PROJECT_NAME}_ui  ui/ARWindow.ui)
-
-set (${PROJECT_NAME}_bin_src src/main.cpp)
 
 #qt5_wrap_cpp(${PROJECT_SOURCE_DIR}/ui/moc_test.h ${${PROJECT_NAME}_hdr})
 #qt5_wrap_ui (${PROJECT_SOURCE_DIR}/ui/ui_ARWindow.h  ${${PROJECT_NAME}_ui})
@@ -217,8 +216,8 @@ add_dependencies(
 #QT_WRAP_CPP( MOC_SRCS ${MOC_HEADERS} )
 
 add_executable(
-	${PROJECT_NAME}_node
-		${${PROJECT_NAME}_bin_src}
+	ar_window
+		src/windowMain.cpp
 )
 
 ## Rename C++ executable without prefix
@@ -230,14 +229,50 @@ add_executable(
 ## Add cmake target dependencies of the executable
 ## same as for the library above
 add_dependencies(
-	${PROJECT_NAME}_node
+	ar_window
 		${${PROJECT_NAME}_EXPORTED_TARGETS}
 		${catkin_EXPORTED_TARGETS})
 
 ## Specify libraries to link a library or executable target against
 target_link_libraries(
-	${PROJECT_NAME}_node
-		# ${catkin_LIBRARIES}
+	ar_window
+		${catkin_LIBRARIES}
+		Qt5::Widgets
+		Qt5::Svg
+		${PROJECT_NAME}_lib
+)
+
+
+## Declare a C++ executable
+## With catkin_make all packages are built within a single CMake context
+## The recommended prefix ensures that target names across packages don't collide
+
+#QT_ADD_RESOURCES( RES_SOURCES ${RESOURCES} )
+#QT_WRAP_UI( UI_HEADERS ${UIS} )
+#QT_WRAP_CPP( MOC_SRCS ${MOC_HEADERS} )
+
+add_executable(
+	ar_server
+		src/serverMain.cpp
+)
+
+## Rename C++ executable without prefix
+## The above recommended prefix causes long target names, the following renames the
+## target back to the shorter version for ease of user use
+## e.g. "rosrun someones_pkg node" instead of "rosrun someones_pkg someones_pkg_node"
+# set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME node PREFIX "")
+
+## Add cmake target dependencies of the executable
+## same as for the library above
+add_dependencies(
+	ar_server
+		${${PROJECT_NAME}_EXPORTED_TARGETS}
+		${catkin_EXPORTED_TARGETS})
+
+## Specify libraries to link a library or executable target against
+target_link_libraries(
+	ar_server
+		${catkin_LIBRARIES}
 		Qt5::Widgets
 		Qt5::Svg
 		${PROJECT_NAME}_lib

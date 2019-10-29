@@ -5,6 +5,7 @@
 #include <ros/ros.h>
 #include <string.h>
 #include <tum_ar_msgs/ARTaskAction.h>
+#include <tum_ar_msgs/LoadTaskFromFile.h>
 
 namespace tum {
 	class ARServerNode {
@@ -15,8 +16,9 @@ namespace tum {
 			void run();
 			void executeARTask();
 			void userInputCallback(const tum_ar_msgs::Outcome::ConstPtr& msg);
+			bool loadTaskFromFileServiceCB(tum_ar_msgs::LoadTaskFromFile::Request& request, tum_ar_msgs::LoadTaskFromFile::Response& response);
 
-			//static std::vector<tum_ar_msgs::ARSlide> loadSlides(const std::string& file) ;
+			static std::string preparePath(const std::string& path);
 
 		private:
 			void publishFeedback(unsigned int slide, const tum_ar_msgs::Outcome& outcome) {
@@ -30,6 +32,7 @@ namespace tum {
 			ros::NodeHandle _nh;
 			ros::Subscriber _userInputSub;
 			ros::Publisher _arSlidePub;
+			ros::ServiceServer _loadTaskFromFileServer;
 			actionlib::SimpleActionServer<tum_ar_msgs::ARTaskAction> _actionServer;
 
 			std::string _taskDescriptionFile;

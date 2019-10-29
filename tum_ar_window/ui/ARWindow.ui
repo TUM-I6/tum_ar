@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>418</width>
-    <height>315</height>
+    <width>444</width>
+    <height>282</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -56,6 +56,132 @@ border-style: none ;</string>
       <property name="leftMargin">
        <number>0</number>
       </property>
+      <item>
+       <widget class="QPushButton" name="defaultButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 gray, stop: 1 dimgray);
+border-radius: 3px;
+border: 1px solid dimgray;
+border-style: outset;
+color: white;
+padding: 2px;
+}
+QPushButton:pressed{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 dimgray, stop: 1 gray);
+}
+QPushButton:disabled{
+color:grey; background-color: darkgrey;
+}</string>
+        </property>
+        <property name="text">
+         <string>Default</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="infoButton">
+        <property name="sizePolicy">
+         <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
+          <horstretch>0</horstretch>
+          <verstretch>0</verstretch>
+         </sizepolicy>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">QPushButton{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 blue, stop: 1 darkblue);
+border-radius: 3px;
+border: 1px solid darkblue;
+border-style: outset; color: white;
+padding: 2px;
+}
+QPushButton:pressed{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 darkblue, stop: 1 blue);
+}
+QPushButton:disabled{
+color:grey; background-color: darkgrey;
+}</string>
+        </property>
+        <property name="text">
+         <string>Info</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="successButton">
+        <property name="styleSheet">
+         <string notr="true">QPushButton{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 green, stop: 1 darkgreen);
+border-radius: 3px;
+border: 1px solid darkgreen;
+border-style: outset;
+color: white;
+padding: 2px;
+}
+QPushButton:pressed{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 darkgreen, stop: 1 green);
+}
+QPushButton:disabled{
+color:grey; background-color: darkgrey;
+}</string>
+        </property>
+        <property name="text">
+         <string>Success</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="warnButton">
+        <property name="styleSheet">
+         <string notr="true">QPushButton{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 Orange, stop: 1 DarkGoldenRod);
+border-radius: 3px;
+border: 1px solid DarkGoldenRod;
+border-style: outset;
+color: white;
+padding: 2px;
+}
+QPushButton:pressed{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 DarkGoldenRod, stop: 1 orange);
+}
+QPushButton:disabled{
+color:grey; background-color: darkgrey;
+}</string>
+        </property>
+        <property name="text">
+         <string>Warn</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="errorButton">
+        <property name="styleSheet">
+         <string notr="true">QPushButton{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 red, stop: 1 darkred);
+border-radius: 3px;
+border: 1px solid darkred;
+border-style: outset;
+color: white;
+padding: 2px;
+}
+QPushButton:pressed{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 darkred, stop: 1 red);
+}
+QPushButton:disabled{
+color:grey; background-color: darkgrey;
+}</string>
+        </property>
+        <property name="text">
+         <string>Error</string>
+        </property>
+       </widget>
+      </item>
      </layout>
     </item>
    </layout>

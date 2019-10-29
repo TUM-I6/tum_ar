@@ -9,6 +9,15 @@ tum::TouchscreenWindow::TouchscreenWindow(QWidget* parent)
 : QMainWindow(parent),
   _ui(new Ui::TouchscreenWindow) {
 	_ui->setupUi(this);
+
+	setWindowTitle("Touchscreen UI");
+
+	_defaultButtonTemplate = createButtonCopy(_ui->defaultButton);
+	_infoButtonTemplate = createButtonCopy(_ui->infoButton);
+	_successButtonTemplate = createButtonCopy(_ui->successButton);
+	_warnButtonTemplate = createButtonCopy(_ui->warnButton);
+	_errorButtonTemplate = createButtonCopy(_ui->errorButton);
+	
 	clearInterface();
 
 	_userInputPub = _nh.advertise<tum_ar_msgs::Outcome>("user_input", 1);
@@ -18,6 +27,13 @@ tum::TouchscreenWindow::~TouchscreenWindow() {
 	if (isVisible()) {
 		close();
 	}
+}
+
+QPushButton* tum::TouchscreenWindow::createButtonCopy(const QPushButton* button) {
+	QPushButton* copy = new QPushButton(button->text());
+	copy->setStyle(button->style());
+	copy->setSizePolicy(button->sizePolicy());
+	return copy;
 }
 
 void tum::TouchscreenWindow::showInterface(const tum_ar_msgs::ARSlide& slide) {
@@ -39,12 +55,40 @@ void tum::TouchscreenWindow::addButtons(std::vector<tum_ar_msgs::Outcome> outcom
 	ROS_INFO_STREAM("Adding "<<outcomeOptions.size()<<" buttons...");
 
 	for (const tum_ar_msgs::Outcome& option : outcomeOptions) {
-		QPushButton* button = new QPushButton(QString::fromStdString(option.name));
-		button->setProperty("option_id", QVariant(option.id));
-		button->setProperty("option_type", QVariant(option.type));
+		QPushButton* button = getButton(option);
 		_ui->buttonBarHorizontalLayout->addWidget(button);
 		QObject::connect(button, SIGNAL(clicked()),this, SLOT(pushButtonOutcomeClicked())) ;
 	}
+}
+
+QPushButton* tum::TouchscreenWindow::getButton(const tum_ar_msgs::Outcome& outcome) {
+	QPushButton* button;
+
+	if (outcome.type == tum_ar_msgs::Outcome::TYPE_DEFAULT) {
+		button = createButtonCopy(_defaultButtonTemplate);
+	}
+	else if (outcome.type == tum_ar_msgs::Outcome::TYPE_INFO) {
+		button = createButtonCopy(_infoButtonTemplate);
+	}
+	else if (outcome.type == tum_ar_msgs::Outcome::TYPE_SUCCESS) {
+		button = createButtonCopy(_successButtonTemplate);
+	}
+	else if (outcome.type == tum_ar_msgs::Outcome::TYPE_WARN) {
+		button = createButtonCopy(_warnButtonTemplate);
+	}
+	else if (outcome.type == tum_ar_msgs::Outcome::TYPE_ERROR) {
+		button = createButtonCopy(_errorButtonTemplate);
+	}
+	else {
+		ROS_WARN_STREAM("Unknown outcome type: "<<outcome.type<<". Using default type instead.");
+		button = createButtonCopy(_defaultButtonTemplate);
+	}
+
+	button->setText(QString::fromStdString(outcome.name));
+	button->setProperty("option_id", QVariant(outcome.id));
+	button->setProperty("option_type", QVariant(outcome.type));
+
+	return button;
 }
 
 void tum::TouchscreenWindow::clearButtons() {

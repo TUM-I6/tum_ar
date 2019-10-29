@@ -55,7 +55,7 @@
          <string notr="true">font-size: 32pt;</string>
         </property>
         <property name="text">
-         <string>Please do something</string>
+         <string>Instruction Label</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -65,7 +65,10 @@
       <item>
        <layout class="QHBoxLayout" name="buttonBarHorizontalLayout">
         <item>
-         <widget class="QPushButton" name="demoButton">
+         <widget class="QPushButton" name="defaultButton">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
           <property name="sizePolicy">
            <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
             <horstretch>0</horstretch>
@@ -73,10 +76,158 @@
            </sizepolicy>
           </property>
           <property name="styleSheet">
-           <string notr="true">font-size: 16pt;</string>
+           <string notr="true">#defaultButton{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 gray, stop: 1 dimgray);
+border-radius: 3px;
+border: 1px solid dimgray;
+border-style: outset;
+ font-weight: bold; font-size: 12pt; color: white;
+}
+#defaultButton:pressed{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 dimgray, stop: 1 gray);
+}
+#defaultButton:disabled{
+color:grey; background-color: darkgrey;
+}</string>
           </property>
           <property name="text">
-           <string>PushButton</string>
+           <string>Default Button</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="infoButton">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">#infoButton{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 blue, stop: 1 darkblue);
+border-radius: 3px;
+border: 1px solid darkblue;
+border-style: outset;
+ font-weight: bold; font-size: 12pt; color: white;
+}
+#infoButton:pressed{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 darkblue, stop: 1 blue);
+}
+#infoButton:disabled{
+color:grey; background-color: darkgrey;
+}</string>
+          </property>
+          <property name="text">
+           <string>Info Button</string>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="successButton">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">#successButton{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 green, stop: 1 darkgreen);
+border-radius: 3px;
+border: 1px solid darkgreen;
+border-style: outset;
+ font-weight: bold; font-size: 12pt; color: white;
+}
+#successButton:pressed{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 darkgreen, stop: 1 green);
+}
+#successButton:disabled{
+color:grey; background-color: darkgrey;
+}</string>
+          </property>
+          <property name="text">
+           <string>Success Button</string>
+          </property>
+          <property name="flat">
+           <bool>false</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="warnButton">
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">#warnButton{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 Orange, stop: 1 DarkGoldenRod);
+border-radius: 3px;
+border: 1px solid DarkGoldenRod;
+border-style: outset;
+ font-weight: bold; font-size: 12pt; color: white;
+}
+#warnButton:pressed{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 DarkGoldenRod, stop: 1 orange);
+}
+#warnButton:disabled{
+color:grey; background-color: darkgrey;
+}</string>
+          </property>
+          <property name="text">
+           <string>Warn Button</string>
+          </property>
+          <property name="flat">
+           <bool>true</bool>
+          </property>
+         </widget>
+        </item>
+        <item>
+         <widget class="QPushButton" name="errorButton">
+          <property name="enabled">
+           <bool>true</bool>
+          </property>
+          <property name="sizePolicy">
+           <sizepolicy hsizetype="Minimum" vsizetype="Preferred">
+            <horstretch>0</horstretch>
+            <verstretch>0</verstretch>
+           </sizepolicy>
+          </property>
+          <property name="autoFillBackground">
+           <bool>false</bool>
+          </property>
+          <property name="styleSheet">
+           <string notr="true">#errorButton{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 red, stop: 1 darkred);
+border-radius: 3px;
+border: 1px solid darkred;
+border-style: outset;
+ font-weight: bold; font-size: 12pt; color: white;
+}
+#errorButton:pressed{
+background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 darkred, stop: 1 red);
+}
+#errorButton:disabled{
+color:grey; background-color: darkgrey;
+}</string>
+          </property>
+          <property name="text">
+           <string>Error Button</string>
           </property>
          </widget>
         </item>

@@ -5,7 +5,7 @@
 #define ROS_PACKAGE_NAME "tum_ar_window"
 
 tum::ARServerNode::ARServerNode()
-: _actionServer(_nh, "ar_inspection", false) {
+: _actionServer(_nh, "ar_task", false) {
 	_blankSlide.instruction = "";
 
 	bool autostart;

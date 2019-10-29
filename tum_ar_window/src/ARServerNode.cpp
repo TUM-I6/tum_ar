@@ -74,9 +74,30 @@ void tum::ARServerNode::executeARTask() { // const tum_ar_window::ARTaskGoalCons
 	}
 	else if (goal->task_description_file != "") {
 		if (goal->task_description_file[0] == '/') {
+			// absolute path starting with "/"
 			_slides = ConfigReader::readConfigFile(goal->task_description_file);
 		}
+		else if (goal->task_description_file.rfind("file://", 0) == 0) {
+			// absolute path starting with "file://"
+			std::string path = goal->task_description_file.substr(std::string("file://").size(), goal->task_description_file.size());
+			_slides = ConfigReader::readConfigFile("/"+path);
+		}
+		else if (goal->task_description_file.rfind("package://", 0) == 0) {
+			// relative path to tos package, starting with "package://"
+			std::string path = goal->task_description_file.substr(std::string("package://").size(), goal->task_description_file.size());
+			std::string targetPackage;
+
+			unsigned int i=0;
+			while (path.at(i) != '/') {
+				targetPackage += path.at(i);
+				i++;
+			}
+
+			std::string remainingPath = path.substr(i, goal->task_description_file.size());
+			_slides = ConfigReader::readConfigFile(ros::package::getPath(targetPackage)+remainingPath);
+		}
 		else {
+			// relative path
 			_slides = ConfigReader::readConfigFile(ros::package::getPath(ROS_PACKAGE_NAME)+"/"+goal->task_description_file);
 		}
 	}

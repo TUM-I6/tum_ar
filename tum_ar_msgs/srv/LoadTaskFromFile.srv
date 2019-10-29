@@ -1,0 +1,8 @@
+# Name of *yaml file to load slides from.
+# Use "package://" prefix to indicate that data should be loaded from a specific ros package
+string task_description_file
+
+---
+
+# Slides to show
+tum_ar_msgs/ARSlide[] slides

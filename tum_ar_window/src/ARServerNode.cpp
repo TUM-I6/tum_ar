@@ -26,6 +26,7 @@ tum::ARServerNode::ARServerNode()
 		_slides = ConfigReader::readConfigFile(_taskDescriptionFile);
 	}
 
+	_loadTaskFromFileServer = _nh.advertiseService("load_task", &ARServerNode::loadTaskFromFileServiceCB, this);
 	_actionServer.registerGoalCallback(boost::bind(&ARServerNode::executeARTask, this));
 	_actionServer.start();
 
@@ -73,36 +74,10 @@ void tum::ARServerNode::executeARTask() { // const tum_ar_window::ARTaskGoalCons
 		_slides = goal->slides;
 	}
 	else if (goal->task_description_file != "") {
-		if (goal->task_description_file[0] == '/') {
-			// absolute path starting with "/"
-			_slides = ConfigReader::readConfigFile(goal->task_description_file);
-		}
-		else if (goal->task_description_file.rfind("file://", 0) == 0) {
-			// absolute path starting with "file://"
-			std::string path = goal->task_description_file.substr(std::string("file://").size(), goal->task_description_file.size());
-			_slides = ConfigReader::readConfigFile("/"+path);
-		}
-		else if (goal->task_description_file.rfind("package://", 0) == 0) {
-			// relative path to tos package, starting with "package://"
-			std::string path = goal->task_description_file.substr(std::string("package://").size(), goal->task_description_file.size());
-			std::string targetPackage;
-
-			unsigned int i=0;
-			while (path.at(i) != '/') {
-				targetPackage += path.at(i);
-				i++;
-			}
-
-			std::string remainingPath = path.substr(i, goal->task_description_file.size());
-			_slides = ConfigReader::readConfigFile(ros::package::getPath(targetPackage)+remainingPath);
-		}
-		else {
-			// relative path
-			_slides = ConfigReader::readConfigFile(ros::package::getPath(ROS_PACKAGE_NAME)+"/"+goal->task_description_file);
-		}
+		_slides = ConfigReader::readConfigFile(preparePath(goal->task_description_file));
 	}
 	else {
-		ROS_WARN_STREAM("[ARServerNode] No slides specified. Loading task description from "<<_taskDescriptionFile);
+		ROS_WARN_STREAM("[ARServerNode] No slides specified. Using sample slides from "<<_taskDescriptionFile);
 		_slides = ConfigReader::readConfigFile(_taskDescriptionFile);
 	}
 
@@ -122,7 +97,7 @@ void tum::ARServerNode::executeARTask() { // const tum_ar_window::ARTaskGoalCons
 	}
 
 	// publish info to the console for the user
-	ROS_INFO_STREAM("[tum_ar_window] Running AR inspection based on "<<_slides.size()<<" slides");
+	ROS_INFO_STREAM("[tum_ar_server] Running AR inspection based on "<<_slides.size()<<" slides");
 	_arSlidePub.publish(_slides[_step]);
 }
 
@@ -151,3 +126,49 @@ void tum::ARServerNode::userInputCallback(const tum_ar_msgs::Outcome::ConstPtr& 
 		_arSlidePub.publish(_slides[_step]);
 	}
 }
+
+std::string tum::ARServerNode::preparePath(const std::string& rawPath) {
+	std::string path;
+
+	if (rawPath.size() <= 0) {
+		path = "";
+	}
+	else if (rawPath[0] == '/') {
+		// absolute path starting with "/"
+		path = rawPath;
+	}
+	else if (rawPath.rfind("file://", 0) == 0) {
+		// absolute path starting with "file://"
+		std::string subpath = rawPath.substr(std::string("file://").size(), rawPath.size());
+		path = "/"+subpath;
+	}
+	else if (rawPath.rfind("package://", 0) == 0) {
+		// relative path to tos package, starting with "package://"
+		std::string subpath = rawPath.substr(std::string("package://").size(), rawPath.size());
+		std::string targetPackage;
+
+		unsigned int i=0;
+		while (subpath.at(i) != '/') {
+			targetPackage += subpath.at(i);
+			i++;
+		}
+
+		std::string remainingPath = subpath.substr(i, rawPath.size());
+		path = ros::package::getPath(targetPackage)+remainingPath;
+	}
+	else {
+		// relative path
+		path = ros::package::getPath(ROS_PACKAGE_NAME)+"/"+rawPath;
+	}
+
+	return path;
+}
+
+bool tum::ARServerNode::loadTaskFromFileServiceCB(tum_ar_msgs::LoadTaskFromFile::Request& request, tum_ar_msgs::LoadTaskFromFile::Response& response) {
+	ROS_INFO_STREAM("[tum_ar_server] Request path "<<request.task_description_file);
+	std::string path = preparePath(request.task_description_file);
+	ROS_INFO_STREAM("[tum_ar_server] Loading task description from "<<path);
+	response.slides = ConfigReader::readConfigFile(path);
+	return true;
+}
+

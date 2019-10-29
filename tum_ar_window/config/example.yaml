@@ -31,7 +31,7 @@ slides:
         label: "right"
     outcomes:
       - name: "Done"
-        type: 0
+        type: 1
         id: 0
     
   - instruction: "Check that the boxes do not touch each other"
@@ -71,8 +71,8 @@ slides:
     pois:
     outcomes:
       - name: "They touch"
-        type: 0
+        type: 4
         id: 0
       - name: "They don't touch"
-        type: 0
+        type: 2
         id: 1

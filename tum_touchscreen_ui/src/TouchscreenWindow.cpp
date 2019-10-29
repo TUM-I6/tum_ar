@@ -17,7 +17,7 @@ tum::TouchscreenWindow::TouchscreenWindow(QWidget* parent)
 	_successButtonTemplate = createButtonCopy(_ui->successButton);
 	_warnButtonTemplate = createButtonCopy(_ui->warnButton);
 	_errorButtonTemplate = createButtonCopy(_ui->errorButton);
-	
+
 	clearInterface();
 
 	_userInputPub = _nh.advertise<tum_ar_msgs::Outcome>("user_input", 1);
@@ -32,6 +32,7 @@ tum::TouchscreenWindow::~TouchscreenWindow() {
 QPushButton* tum::TouchscreenWindow::createButtonCopy(const QPushButton* button) {
 	QPushButton* copy = new QPushButton(button->text());
 	copy->setStyle(button->style());
+	copy->setStyleSheet(button->styleSheet());
 	copy->setSizePolicy(button->sizePolicy());
 	return copy;
 }

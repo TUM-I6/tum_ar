@@ -76,17 +76,17 @@
            </sizepolicy>
           </property>
           <property name="styleSheet">
-           <string notr="true">#defaultButton{
+           <string notr="true">QPushButton{
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 gray, stop: 1 dimgray);
 border-radius: 3px;
 border: 1px solid dimgray;
 border-style: outset;
  font-weight: bold; font-size: 12pt; color: white;
 }
-#defaultButton:pressed{
+QPushButton:pressed{
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 dimgray, stop: 1 gray);
 }
-#defaultButton:disabled{
+QPushButton:disabled{
 color:grey; background-color: darkgrey;
 }</string>
           </property>
@@ -107,17 +107,17 @@ color:grey; background-color: darkgrey;
            </sizepolicy>
           </property>
           <property name="styleSheet">
-           <string notr="true">#infoButton{
+           <string notr="true">QPushButton{
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 blue, stop: 1 darkblue);
 border-radius: 3px;
 border: 1px solid darkblue;
 border-style: outset;
  font-weight: bold; font-size: 12pt; color: white;
 }
-#infoButton:pressed{
+QPushButton:pressed{
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 darkblue, stop: 1 blue);
 }
-#infoButton:disabled{
+QPushButton:disabled{
 color:grey; background-color: darkgrey;
 }</string>
           </property>
@@ -141,17 +141,17 @@ color:grey; background-color: darkgrey;
            <bool>false</bool>
           </property>
           <property name="styleSheet">
-           <string notr="true">#successButton{
+           <string notr="true">QPushButton{
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 green, stop: 1 darkgreen);
 border-radius: 3px;
 border: 1px solid darkgreen;
 border-style: outset;
  font-weight: bold; font-size: 12pt; color: white;
 }
-#successButton:pressed{
+QPushButton:pressed{
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 darkgreen, stop: 1 green);
 }
-#successButton:disabled{
+QPushButton:disabled{
 color:grey; background-color: darkgrey;
 }</string>
           </property>
@@ -175,17 +175,17 @@ color:grey; background-color: darkgrey;
            <bool>false</bool>
           </property>
           <property name="styleSheet">
-           <string notr="true">#warnButton{
+           <string notr="true">QPushButton{
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 Orange, stop: 1 DarkGoldenRod);
 border-radius: 3px;
 border: 1px solid DarkGoldenRod;
 border-style: outset;
  font-weight: bold; font-size: 12pt; color: white;
 }
-#warnButton:pressed{
+QPushButton:pressed{
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 DarkGoldenRod, stop: 1 orange);
 }
-#warnButton:disabled{
+QPushButton:disabled{
 color:grey; background-color: darkgrey;
 }</string>
           </property>
@@ -212,17 +212,17 @@ color:grey; background-color: darkgrey;
            <bool>false</bool>
           </property>
           <property name="styleSheet">
-           <string notr="true">#errorButton{
+           <string notr="true">QPushButton{
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 red, stop: 1 darkred);
 border-radius: 3px;
 border: 1px solid darkred;
 border-style: outset;
  font-weight: bold; font-size: 12pt; color: white;
 }
-#errorButton:pressed{
+QPushButton:pressed{
 background-color: qlineargradient(x1: 0, y1: 0, x2: 0, y2: 1, stop: 0 darkred, stop: 1 red);
 }
-#errorButton:disabled{
+QPushButton:disabled{
 color:grey; background-color: darkgrey;
 }</string>
           </property>

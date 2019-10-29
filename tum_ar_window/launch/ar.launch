@@ -2,7 +2,7 @@
 <launch>
 	<arg name="hide_buttons" default="false"/>
 	<arg name="autostart" default="false"/>
-	<arg name="autostart_timeout" default="1"/>
+	<arg name="autostart_timeout" default="0.5"/>
 
 	<include file="$(find tum_ar_window)/launch/ar_server.launch">
 		<arg name="autostart" value="$(arg autostart)" />

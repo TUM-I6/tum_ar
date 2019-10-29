@@ -41,6 +41,9 @@ namespace tum {
 				return QRect(canvasPosition(), canvasSize());
 			}
 
+			static QPushButton* createButtonCopy(const QPushButton* button);
+			QPushButton* getButton(const tum_ar_msgs::Outcome& outcome);
+
 		public slots:
 			void pushButtonOutcomeClicked();
 
@@ -49,6 +52,12 @@ namespace tum {
 			ros::Publisher _userInputPub;
 			std::unique_ptr<Ui::ARWindow> _ui;
 			std::unique_ptr<QGraphicsScene> _scene;
+
+			QPushButton* _defaultButtonTemplate;
+			QPushButton* _infoButtonTemplate;
+			QPushButton* _successButtonTemplate;
+			QPushButton* _warnButtonTemplate;
+			QPushButton* _errorButtonTemplate;
 	};
 }
 

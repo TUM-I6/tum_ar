@@ -1,0 +1,7 @@
+<!-- Start ar projection node -->
+<launch>
+	<group ns="ar">
+		<!--<node name="touchscreen_window" pkg="tum_touchscreen_ui" type="tum_touchscreen_ui_node" output="screen" launch-prefix="gdb -ex run - -args" />-->
+		<node name="touchscreen_window" pkg="tum_touchscreen_ui" type="tum_touchscreen_ui_node" output="screen" />
+	</group>
+</launch>

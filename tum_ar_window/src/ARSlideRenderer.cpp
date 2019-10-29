@@ -24,11 +24,11 @@ tum::ARSlideRenderer::ARSlideRenderer(const Projector& projector)
 tum::ARSlideRenderer::~ARSlideRenderer() {
 }
 
-QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_window::ARSlide& slide) const {
+QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_msgs::ARSlide& slide) const {
 	return renderSlide(slide, QRect(0,0,_projector.getResolution().x(),_projector.getResolution().y())) ;
 }
 
-QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_window::ARSlide& slide, const QRect& area) const {
+QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_msgs::ARSlide& slide, const QRect& area) const {
 	//ROS_INFO_STREAM("[ARSlideRenderer:"<<__LINE__<<"]") ;
 	QPixmap pixmap(area.width(), area.height()) ;
 	pixmap.fill(Qt::transparent) ;
@@ -36,11 +36,11 @@ QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_window::ARSlide& slide, c
 
 	drawBackground(painter) ;
 
-	for (const tum_ar_window::Box& box : slide.boxes) {
+	for (const tum_ar_msgs::Box& box : slide.boxes) {
 		renderBox(painter, box, area) ;
 	}
 
-	for (const tum_ar_window::POI& poi : slide.pois) {
+	for (const tum_ar_msgs::POI& poi : slide.pois) {
 		renderPOI(painter, poi, area) ;
 	}
 
@@ -49,7 +49,7 @@ QPixmap tum::ARSlideRenderer::renderSlide(const tum_ar_window::ARSlide& slide, c
 	return pixmap ;
 }
 
-void tum::ARSlideRenderer::renderBox(QPainter& painter, const tum_ar_window::Box& box, const QRect& canvasArea) const {
+void tum::ARSlideRenderer::renderBox(QPainter& painter, const tum_ar_msgs::Box& box, const QRect& canvasArea) const {
 	if (box.header.frame_id == _projector.getFrame()) {
 		// draw in Pixel coordinates
 		drawArea(
@@ -92,7 +92,7 @@ void tum::ARSlideRenderer::renderBox(QPainter& painter, const tum_ar_window::Box
 	) ;
 }
 
-void tum::ARSlideRenderer::renderPOI(QPainter& painter, const tum_ar_window::POI& poi, const QRect& canvasArea) const {
+void tum::ARSlideRenderer::renderPOI(QPainter& painter, const tum_ar_msgs::POI& poi, const QRect& canvasArea) const {
 	if (poi.header.frame_id == _projector.getFrame()) {
 		// draw in Pixel coordinates
 		drawPoi(

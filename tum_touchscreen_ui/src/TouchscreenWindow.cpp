@@ -1,86 +1,35 @@
-#include <tum_ar_window/ARWindow.h>
-#include <tum_ar_window/Toolbox.h>
-#include <ui_ARWindow.h>
-#include <QtSvg>
+//
+// Created by arne on 28.10.19.
+//
 
-tum::ARWindow::ARWindow(QWidget *parent)
- : QMainWindow(parent),
-   _ui(new Ui::ARWindow),
-   _scene(new QGraphicsScene) {
+#include <tum_touchscreen_ui/TouchscreenWindow.h>
+#include <ui_TouchscreenWindow.h>
+
+tum::TouchscreenWindow::TouchscreenWindow(QWidget* parent)
+: QMainWindow(parent),
+  _ui(new Ui::TouchscreenWindow) {
 	_ui->setupUi(this);
 
-	setWindowTitle("AR Window");
+	setWindowTitle("Touchscreen UI");
 
 	_defaultButtonTemplate = createButtonCopy(_ui->defaultButton);
 	_infoButtonTemplate = createButtonCopy(_ui->infoButton);
 	_successButtonTemplate = createButtonCopy(_ui->successButton);
 	_warnButtonTemplate = createButtonCopy(_ui->warnButton);
 	_errorButtonTemplate = createButtonCopy(_ui->errorButton);
-	clearButtons();
+
+	clearInterface();
 
 	_userInputPub = _nh.advertise<tum_ar_msgs::Outcome>("user_input", 1);
-
-	_ui->arDisplay->setScene(_scene.get());
-	_ui->arDisplay->show();
 }
 
-tum::ARWindow::~ARWindow() {
+tum::TouchscreenWindow::~TouchscreenWindow() {
 	if (isVisible()) {
 		close();
 	}
 }
 
-void tum::ARWindow::display(const std::string& url) {
-	QPixmap pixmap(url.c_str());
-	display(pixmap);
-}
-
-void tum::ARWindow::display(const QPixmap& pixmap) {
-	QList<QGraphicsItem*> items = _scene->items();
-	for (int i = 0; i < items.size(); i++) {
-		_scene->removeItem(items[i]);
-		delete items[i];
-	}
-	_scene->addPixmap(pixmap);
-}
-
-void tum::ARWindow::addButtons(std::vector<tum_ar_msgs::Outcome> outcomeOptions) {
-	ROS_INFO_STREAM("Adding "<<outcomeOptions.size()<<" buttons...");
-
-	for (const tum_ar_msgs::Outcome& option : outcomeOptions) {
-		QPushButton* button = getButton(option);
-		_ui->buttonBar->addWidget(button);
-		QObject::connect(button, SIGNAL(clicked()),this, SLOT(pushButtonOutcomeClicked())) ;
-	}
-}
-
-void tum::ARWindow::clearButtons() {
-	QLayoutItem *item;
-	while((item = _ui->buttonBar->takeAt(0))) {
-		if (item->widget()) {
-			delete item->widget();
-		}
-		delete item;
-	}
-}
-
-int tum::ARWindow::canvasWidth() const {
-	return _ui->arDisplay->width();
-}
-
-int tum::ARWindow::canvasHeight() const {
-	return _ui->arDisplay->height();
-}
-
-QSize tum::ARWindow::canvasSize() const {
-	return _ui->arDisplay->size();
-}
-
-QPoint tum::ARWindow::canvasPosition() const {
-	return _ui->arDisplay->mapToGlobal(QPoint(0,0));	
-}
-
-QPushButton* tum::ARWindow::createButtonCopy(const QPushButton* button) {
+QPushButton* tum::TouchscreenWindow::createButtonCopy(const QPushButton* button) {
 	QPushButton* copy = new QPushButton(button->text());
 	copy->setStyle(button->style());
 	copy->setStyleSheet(button->styleSheet());
@@ -88,7 +37,32 @@ QPushButton* tum::ARWindow::createButtonCopy(const QPushButton* button) {
 	return copy;
 }
 
-QPushButton* tum::ARWindow::getButton(const tum_ar_msgs::Outcome& outcome) {
+void tum::TouchscreenWindow::showInterface(const tum_ar_msgs::ARSlide& slide) {
+	_ui->noTaskLabel->hide();
+	clearButtons();
+
+	_ui->instructionLabel->setText(QString::fromStdString(slide.instruction));
+	_ui->instructionLabel->show();
+	addButtons(slide.outcomes);
+}
+
+void tum::TouchscreenWindow::clearInterface() {
+	_ui->noTaskLabel->show();
+	_ui->instructionLabel->hide();
+	clearButtons();
+}
+
+void tum::TouchscreenWindow::addButtons(std::vector<tum_ar_msgs::Outcome> outcomeOptions) {
+	ROS_INFO_STREAM("Adding "<<outcomeOptions.size()<<" buttons...");
+
+	for (const tum_ar_msgs::Outcome& option : outcomeOptions) {
+		QPushButton* button = getButton(option);
+		_ui->buttonBarHorizontalLayout->addWidget(button);
+		QObject::connect(button, SIGNAL(clicked()),this, SLOT(pushButtonOutcomeClicked())) ;
+	}
+}
+
+QPushButton* tum::TouchscreenWindow::getButton(const tum_ar_msgs::Outcome& outcome) {
 	QPushButton* button;
 
 	if (outcome.type == tum_ar_msgs::Outcome::TYPE_DEFAULT) {
@@ -118,7 +92,17 @@ QPushButton* tum::ARWindow::getButton(const tum_ar_msgs::Outcome& outcome) {
 	return button;
 }
 
-void tum::ARWindow::pushButtonOutcomeClicked() {
+void tum::TouchscreenWindow::clearButtons() {
+	QLayoutItem *item;
+	while((item = _ui->buttonBarHorizontalLayout->takeAt(0))) {
+		if (item->widget()) {
+			delete item->widget();
+		}
+		delete item;
+	}
+}
+
+void tum::TouchscreenWindow::pushButtonOutcomeClicked() {
 	QPushButton* trigger = (QPushButton*)sender();
 	ROS_INFO_STREAM("[tum_ar_window] Outcome button "<<trigger->property("option_id").toInt()<<" pressed.");
 

@@ -29,6 +29,10 @@ slides:
         border_color: {r: 1.0, g: 0.0, b: 0.0, a: 1.0}
         fill_color: {r: 1.0, g: 1.0, b: 1.0, a: 1.0}
         label: "right"
+    outcomes:
+      - name: "Done"
+        type: 1
+        id: 0
     
   - instruction: "Check that the boxes do not touch each other"
     boxes:
@@ -65,3 +69,10 @@ slides:
         fill_color: {r: 0.0, g: 0.0, b: 0.0, a: 0.0}
         label: "outer box"
     pois:
+    outcomes:
+      - name: "They touch"
+        type: 4
+        id: 0
+      - name: "They don't touch"
+        type: 2
+        id: 1

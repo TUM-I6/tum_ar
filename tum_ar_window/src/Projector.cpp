@@ -5,19 +5,14 @@
 
 unsigned int projectorId = 0 ;
 
-tum::Projector::Projector(ros::NodeHandle& nh)
+tum::Projector::Projector(ros::NodeHandle& nh, const Config& config, const bool publishViewFrustum, const float viewFrustumLength)
 : _nh(nh) {
-	init(true, 1.0, "beamer_optical_frame") ;
-}
-
-tum::Projector::Projector(ros::NodeHandle& nh, const bool publishViewFrustum, const float viewFrustumLength, const std::string& projectorFrame)
-: _nh(nh) {
-	init(publishViewFrustum, viewFrustumLength, projectorFrame) ;
+	init(publishViewFrustum, viewFrustumLength, config) ;
 }
 
 tum::Projector::Projector(const tum::Projector& other)
 : _nh(other._nh) {
-	init(other._publishViewFrustum, other._viewFrustumLength, other._projectorFrame) ;
+	init(other._publishViewFrustum, other._viewFrustumLength, other._config) ;
 }
 
 tum::Projector& tum::Projector::operator=(const tum::Projector& other) {
@@ -25,30 +20,25 @@ tum::Projector& tum::Projector::operator=(const tum::Projector& other) {
 		return *this;
 	}
 	_nh = other._nh ;
-	init(other._publishViewFrustum, other._viewFrustumLength, other._projectorFrame) ;
+	init(other._publishViewFrustum, other._viewFrustumLength, other._config) ;
 	return *this;
 }
 
 tum::Projector::~Projector() {
 }
 
-void tum::Projector::init(const bool publishViewFrustum, const float viewFrustumLength, const std::string& projectorFrame) {
+void tum::Projector::init(const bool publishViewFrustum, const float viewFrustumLength, const Config& config) {
 	_id = projectorId++ ;
 
 	_publishViewFrustum = publishViewFrustum ;
 	_viewFrustumLength  = viewFrustumLength ;
-	_projectorFrame     = projectorFrame ;
-
-	_resolution = Eigen::Vector2i(1920,1200) ;
-	_k << 4100,    0, 1920/2,
-	         0, 4200, 1100/2,
-	         0,    0,      1;
+	_config = config;
 
 	_viewFrustumPub = _nh.advertise<visualization_msgs::Marker>(VIEW_FRUSTUM_TOPIC, 1) ;
 }
 
 Eigen::Vector2f tum::Projector::projectToPixel(const Eigen::Vector3f& point) const {
-	Eigen::Vector3f pixel = _k*point ;
+	Eigen::Vector3f pixel = _config.k*point ;
 	//ROS_INFO_STREAM("pixel: "<<pixel.transpose()) ;
 	return Eigen::Vector2f(pixel.x()/pixel.z(), pixel.y()/pixel.z()) ;
 }
@@ -84,7 +74,7 @@ Eigen::Matrix<float, 3, 4> tum::Projector::getImagePlane(const float dist) const
 
 void tum::Projector::publishViewFrustumMarker(const Eigen::Matrix<float, 3, 4>& p) {
 	visualization_msgs::Marker marker ;
-	marker.header.frame_id = _projectorFrame ;
+	marker.header.frame_id = _config.projectorFrame ;
 	marker.header.stamp = ros::Time::now() ;
 	marker.header.seq = 0 ;
 	marker.type = marker.LINE_LIST ;

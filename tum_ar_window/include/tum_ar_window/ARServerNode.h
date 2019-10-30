@@ -18,8 +18,6 @@ namespace tum {
 			void userInputCallback(const tum_ar_msgs::Outcome::ConstPtr& msg);
 			bool loadTaskFromFileServiceCB(tum_ar_msgs::LoadTaskFromFile::Request& request, tum_ar_msgs::LoadTaskFromFile::Response& response);
 
-			static std::string preparePath(const std::string& path);
-
 		private:
 			void publishFeedback(unsigned int slide, const tum_ar_msgs::Outcome& outcome) {
 				tum_ar_msgs::ARTaskFeedback feedback;

@@ -2,8 +2,6 @@
 #include <tum_ar_window/ConfigReader.h>
 #include <ros/package.h>
 
-#define ROS_PACKAGE_NAME "tum_ar_window"
-
 tum::ARServerNode::ARServerNode()
 : _actionServer(_nh, "ar_task", false) {
 	_blankSlide.instruction = "";
@@ -12,18 +10,14 @@ tum::ARServerNode::ARServerNode()
 	float autostart_timeout;
 	_nh.param<bool>("autostart", autostart, false);
 	_nh.param<float>("autostart_timeout", autostart_timeout, 3.0);
-	_nh.param<std::string>("task_description", _taskDescriptionFile, ros::package::getPath(ROS_PACKAGE_NAME)+"/config/config.yaml");
-
-	if (_taskDescriptionFile[0] != '/') {
-		_taskDescriptionFile = ros::package::getPath(ROS_PACKAGE_NAME)+"/"+_taskDescriptionFile;
-	}
+	_nh.param<std::string>("task_description", _taskDescriptionFile, std::string("package:://")+ROS_PACKAGE_NAME+"/slides/example.yaml");
 
 	_userInputSub = _nh.subscribe("user_input", 10, &ARServerNode::userInputCallback, this);
 	_arSlidePub = _nh.advertise<tum_ar_msgs::ARSlide>("ar_slide", 1);
 
 	if (autostart) {
 		_taskActive = true;
-		_slides = ConfigReader::readConfigFile(_taskDescriptionFile);
+		_slides = ConfigReader::readARTaskDescription(ConfigReader::preparePath(_taskDescriptionFile));
 	}
 
 	_loadTaskFromFileServer = _nh.advertiseService("load_task", &ARServerNode::loadTaskFromFileServiceCB, this);
@@ -74,11 +68,11 @@ void tum::ARServerNode::executeARTask() { // const tum_ar_window::ARTaskGoalCons
 		_slides = goal->slides;
 	}
 	else if (goal->task_description_file != "") {
-		_slides = ConfigReader::readConfigFile(preparePath(goal->task_description_file));
+		_slides = ConfigReader::readARTaskDescription(ConfigReader::preparePath(goal->task_description_file));
 	}
 	else {
 		ROS_WARN_STREAM("[ARServerNode] No slides specified. Using sample slides from "<<_taskDescriptionFile);
-		_slides = ConfigReader::readConfigFile(_taskDescriptionFile);
+		_slides = ConfigReader::readARTaskDescription(_taskDescriptionFile);
 	}
 
 	if (_slides.size() == 0) {
@@ -127,48 +121,11 @@ void tum::ARServerNode::userInputCallback(const tum_ar_msgs::Outcome::ConstPtr& 
 	}
 }
 
-std::string tum::ARServerNode::preparePath(const std::string& rawPath) {
-	std::string path;
-
-	if (rawPath.size() <= 0) {
-		path = "";
-	}
-	else if (rawPath[0] == '/') {
-		// absolute path starting with "/"
-		path = rawPath;
-	}
-	else if (rawPath.rfind("file://", 0) == 0) {
-		// absolute path starting with "file://"
-		std::string subpath = rawPath.substr(std::string("file://").size(), rawPath.size());
-		path = "/"+subpath;
-	}
-	else if (rawPath.rfind("package://", 0) == 0) {
-		// relative path to tos package, starting with "package://"
-		std::string subpath = rawPath.substr(std::string("package://").size(), rawPath.size());
-		std::string targetPackage;
-
-		unsigned int i=0;
-		while (subpath.at(i) != '/') {
-			targetPackage += subpath.at(i);
-			i++;
-		}
-
-		std::string remainingPath = subpath.substr(i, rawPath.size());
-		path = ros::package::getPath(targetPackage)+remainingPath;
-	}
-	else {
-		// relative path
-		path = ros::package::getPath(ROS_PACKAGE_NAME)+"/"+rawPath;
-	}
-
-	return path;
-}
-
 bool tum::ARServerNode::loadTaskFromFileServiceCB(tum_ar_msgs::LoadTaskFromFile::Request& request, tum_ar_msgs::LoadTaskFromFile::Response& response) {
 	ROS_INFO_STREAM("[tum_ar_server] Request path "<<request.task_description_file);
-	std::string path = preparePath(request.task_description_file);
+	std::string path = ConfigReader::preparePath(request.task_description_file);
 	ROS_INFO_STREAM("[tum_ar_server] Loading task description from "<<path);
-	response.slides = ConfigReader::readConfigFile(path);
+	response.slides = ConfigReader::readARTaskDescription(path);
 	return true;
 }
 

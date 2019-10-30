@@ -28,11 +28,12 @@ namespace tum {
 		ros::Subscriber _arSlideSub;
 		QApplication& _qa;
 		ARWindow _window;
+		Projector::Config _projectorConfig;
 		Projector _projector;
 		ARSlideRenderer _renderer;
 		bool _hideButtons;
 
-		std::string _taskDescriptionFile;
+		std::string _projectorConfigFile;
 
 		tum_ar_msgs::ARSlide _slide;
 	};

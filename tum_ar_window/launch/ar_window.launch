@@ -1,8 +1,10 @@
 <!-- Start ar projection node -->
 <launch>
+	<arg name="projector_config" default="$(find tum_ar_window)/config/projector_tum.yaml"/>
 	<arg name="hide_buttons" default="false"/>
 
 	<group ns="ar">
+		<param name="projector_config" value="$(arg projector_config)" />
 		<param name="hide_buttons" value="$(arg hide_buttons)" />
 
 		<!-- <node name="ar_window" pkg="tum_ar_window" type="ar_window" output="screen" launch-prefix="gdb -ex run - -args" /> -->

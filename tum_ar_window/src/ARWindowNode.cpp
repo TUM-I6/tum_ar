@@ -5,19 +5,17 @@
 #define ROS_PACKAGE_NAME "tum_ar_window"
 
 tum::ARWindowNode::ARWindowNode(QApplication& qa)
-		: _projector(_nh),
+		: _projector(_nh, _projectorConfig),
 		  _renderer(_projector),
 		  _qa(qa) {
 
 	_window.showFullScreen();
 
 	_nh.param<bool>("hide_buttons", _hideButtons, false);
+	_nh.param<std::string>("projector_config", _projectorConfigFile, std::string("package:://")+ROS_PACKAGE_NAME+"/config/projector_tum.yaml");
 
-	_nh.param<std::string>("task_description", _taskDescriptionFile, ros::package::getPath(ROS_PACKAGE_NAME)+"/config/config.yaml");
-
-	if (_taskDescriptionFile[0] != '/') {
-		_taskDescriptionFile = ros::package::getPath(ROS_PACKAGE_NAME)+"/"+_taskDescriptionFile;
-	}
+	_projectorConfig = ConfigReader::readProjectorConfig(ConfigReader::preparePath(_projectorConfigFile));
+	_projector.setConfig(_projectorConfig);
 
 	_arSlideSub = _nh.subscribe("ar_slide", 10, &ARWindowNode::arSlideCallback, this);
 }

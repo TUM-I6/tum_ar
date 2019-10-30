@@ -3,12 +3,16 @@
 	<arg name="hide_buttons" default="false"/>
 	<arg name="autostart" default="false"/>
 	<arg name="autostart_timeout" default="0.5"/>
+	<arg name="task_description" default="$(find tum_ar_window)/slides/example.yaml"/>
+	<arg name="projector_config" default="$(find tum_ar_window)/config/projector_tum.yaml"/>
 
 	<include file="$(find tum_ar_window)/launch/ar_server.launch">
 		<arg name="autostart" value="$(arg autostart)" />
 		<arg name="autostart_timeout" value="$(arg autostart_timeout)" />
+		<arg name="task_description" value="$(arg task_description)" />
 	</include>
 	<include file="$(find tum_ar_window)/launch/ar_window.launch">
+		<arg name="projector_config" value="$(arg projector_config)" />
 		<arg name="hide_buttons" value="$(arg hide_buttons)" />
 	</include>
 </launch>

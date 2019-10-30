@@ -8,51 +8,63 @@
 
 namespace tum {
 	class Projector {
+		
 		public:
-			Projector(ros::NodeHandle& nh) ;
-			Projector(ros::NodeHandle& nh, const bool publishViewFrustum, const float viewFrustumLenght, const std::string& beamerFrame = "beamer_optical_frame") ;
-			Projector(const Projector& other) ;
-			Projector& operator=(const Projector& other) ;
+			struct Config {
+				Eigen::Matrix3f k;
+				Eigen::Vector2i resolution;
+				std::string projectorFrame;
+			};
 
-			virtual ~Projector() ;
+			Projector(ros::NodeHandle& nh);
+			Projector(ros::NodeHandle& nh, const Config& projectorConfig, const bool publishViewFrustum=true, const float viewFrustumLength=1.0);
+			Projector(const Projector& other);
+			Projector& operator=(const Projector& other);
+
+			virtual ~Projector();
 
 			Eigen::Vector2f getFocalWidth() const {
-				return Eigen::Vector2f(_k(0,0), _k(1,1)) ; // focal width
+				return Eigen::Vector2f(_config.k(0,0), _config.k(1,1)); // focal width
 			}
 
 			Eigen::Vector2i getResolution() const {
-				return _resolution ;
+				return _config.resolution;
 			}
 
 			std::string getFrame() const {
-				return _projectorFrame ;
+				return _config.projectorFrame;
 			}
 
-			Eigen::Matrix3f getCameraMatrix() const {
-				return _k ;
+			Eigen::Matrix3f getProjectionMatrix() const {
+				return _config.k;
 			}
 
-			Eigen::Vector2f projectToPixel(const Eigen::Vector3f& point) const ;
+			Eigen::Vector2f projectToPixel(const Eigen::Vector3f& point) const;
 
-			Eigen::Matrix<float, 3, 4> getImagePlane(const float dist) const ;
-			void publishViewFrustumMarker(const Eigen::Matrix<float, 3, 4>& plane) ;
+			Eigen::Matrix<float, 3, 4> getImagePlane(const float dist) const;
+			void publishViewFrustumMarker(const Eigen::Matrix<float, 3, 4>& plane);
+
+			void setConfig(const Config& config) {
+				_config = config;
+			}
+
+			const Config& config() const {
+				return _config;
+			}
 
 		private:
-			void init(const bool publishViewFrustum, const float viewFrustumLenght, const std::string& projectorFrame) ;
+			void init(const bool publishViewFrustum, const float viewFrustumLenght, const Config& config);
 
-			ros::NodeHandle& _nh ;
-			ros::Publisher _viewFrustumPub ;
+			ros::NodeHandle& _nh;
+			ros::Publisher _viewFrustumPub;
 
-			std::string _projectorFrame ;
+			Config _config;
 			
-			bool _publishViewFrustum ;
-			float _viewFrustumLength ;
-
-			Eigen::Matrix3f _k ;
-			Eigen::Vector2i _resolution ;
+			bool _publishViewFrustum;
+			float _viewFrustumLength;
 			
-			unsigned int _id ;
-	} ;
+			unsigned int _id;
+	};
 }
 
 #endif

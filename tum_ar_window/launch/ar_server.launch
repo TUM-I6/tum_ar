@@ -2,9 +2,10 @@
 <launch>
 	<arg name="autostart" default="false"/>
 	<arg name="autostart_timeout" default="0.5"/>
+	<arg name="task_description" default="$(find tum_ar_window)/slides/example.yaml"/>
 
 	<group ns="ar">
-		<param name="task_description" value="$(find tum_ar_window)/config/example.yaml" />
+		<param name="task_description" value="$(arg task_description)" />
 		<param name="autostart" value="$(arg autostart)" />
 		<param name="autostart_timeout" value="$(arg autostart_timeout)" />
 

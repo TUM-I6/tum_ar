@@ -1,0 +1,6 @@
+projector_frame: "beamer_optical_frame"
+projection_matrix:
+  - [2700,    0, 960]
+  - [   0, 2700, 600]
+  - [   0,    0,   1]
+resolution: [1920, 1200]

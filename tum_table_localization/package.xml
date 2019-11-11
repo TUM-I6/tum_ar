@@ -1,25 +1,22 @@
 <?xml version="1.0"?>
 <package>
   <name>tum_table_localization</name>
-  <version>0.0.0</version>
+  <version>0.1.0</version>
   <description>The tum_table_localization package</description>
 
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
   <!-- <maintainer email="jane.doe@example.com">Jane Doe</maintainer> -->
-  <maintainer email="arne@todo.todo">arne</maintainer>
+  <maintainer email="arne.peters@tum.de">Arne Peters</maintainer>
 
 
   <!-- One license tag required, multiple allowed, one license per tag -->
-  <!-- Commonly used license strings: -->
-  <!--   BSD, MIT, Boost Software License, GPLv2, GPLv3, LGPLv2.1, LGPLv3 -->
-  <license>TODO</license>
+  <license>BSD 3-Clause License</license>
 
 
   <!-- Url tags are optional, but multiple are allowed, one per tag -->
   <!-- Optional attribute type can be: website, bugtracker, or repository -->
-  <!-- Example: -->
-  <!-- <url type="website">http://wiki.ros.org/tum_table_localization</url> -->
+  <url type="repository">https://gitlab.lrz.de/robot-lab/tum_ar</url>
 
 
   <!-- Author tags are optional, multiple are allowed, one per tag -->

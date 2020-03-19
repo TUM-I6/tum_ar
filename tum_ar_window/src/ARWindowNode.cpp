@@ -24,7 +24,7 @@ tum::ARWindowNode::~ARWindowNode() {
 }
 
 void tum::ARWindowNode::run() {
-	ros::Rate rate(30);
+	ros::Rate rate(60);
 
 	QPixmap slide;
 	while(ros::ok() && _window.isVisible()) {
